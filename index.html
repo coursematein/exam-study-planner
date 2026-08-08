@@ -1,243 +1,329 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exam Study Planner</title>
-  <style>
-* { box-sizing: border-box; }
-body {
-  margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f5f7fb; color: #172033;
-}
-.container { max-width: 950px; margin: auto; padding: 32px 18px 60px; }
-header { margin-bottom: 24px; }
-.eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; font-weight: 700; opacity: .65; }
-h1 { font-size: clamp(2rem, 6vw, 3.4rem); margin: 5px 0 10px; }
-h2 { margin-top: 0; }
-.subtitle { max-width: 680px; color: #5e687a; line-height: 1.6; }
-.card {
-  background: white; border: 1px solid #e4e8f0; border-radius: 16px;
-  padding: 20px; margin-bottom: 18px; box-shadow: 0 5px 20px rgba(20,30,50,.04);
-}
-.form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 16px; }
-label { font-weight: 650; font-size: .9rem; }
-input {
-  display: block; width: 100%; margin-top: 7px; padding: 11px 12px;
-  border: 1px solid #d8deea; border-radius: 10px; font: inherit;
-}
-button {
-  border: 0; border-radius: 10px; padding: 11px 16px; cursor: pointer;
-  font-weight: 700; background: #172033; color: white;
-}
-button.secondary { background: #edf1f7; color: #172033; }
-.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
-.stat span { display:block; color:#6c7483; font-size:.8rem; margin-bottom:8px; }
-.stat strong { font-size: 1.35rem; }
-.section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px; }
-.subject {
-  border: 1px solid #e1e5ec; border-radius: 12px; padding: 15px; margin-bottom: 12px;
-}
-.subject-title { display:flex; gap:10px; align-items:center; margin-bottom:12px; }
-.subject-title input { margin:0; flex:1; font-weight:700; }
-.topic-row { display:flex; align-items:center; gap:9px; margin:8px 0; }
-.topic-row input[type="text"] { margin:0; flex:1; }
-.topic-row input[type="checkbox"] { width:auto; margin:0; }
-.delete { background: transparent; color:#9b3341; padding:6px 8px; }
-.progress-track { height: 16px; background:#edf0f5; border-radius:99px; overflow:hidden; }
-.progress-bar { height:100%; width:0%; transition:width .25s ease; }
-#progressText { color:#606a7a; }
-footer { text-align:center; color:#7a8290; font-size:.85rem; margin-top:25px; }
-@media (max-width: 700px) {
-  .form-grid, .stats { grid-template-columns: 1fr 1fr; }
-  .form-grid label:first-child { grid-column: 1 / -1; }
-}
-@media (max-width: 480px) {
-  .stats { grid-template-columns: 1fr 1fr; }
-  .section-head { align-items:flex-start; flex-direction:column; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exam Study Planner v2</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fb;color:#172033}
+.container{max-width:1100px;margin:auto;padding:28px 16px 60px}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;font-weight:800;color:#657086}
+h1{font-size:clamp(2.1rem,6vw,3.5rem);margin:4px 0 8px}.subtitle{color:#657086;line-height:1.6;margin-top:0}
+.card{background:#fff;border:1px solid #e1e6ef;border-radius:18px;padding:20px;margin:16px 0;box-shadow:0 6px 24px rgba(20,30,50,.05)}
+.tabs{display:flex;gap:8px;overflow:auto;padding:4px 0 10px;position:sticky;top:0;background:#f5f7fb;z-index:5}
+.tab{white-space:nowrap;background:#e9eef6;color:#172033;border:0;border-radius:11px;padding:11px 15px;font-weight:750}.tab.active{background:#172033;color:#fff}
+.grid{display:grid;gap:14px}.grid4{grid-template-columns:repeat(4,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:repeat(2,1fr)}
+label{display:block;font-weight:700;font-size:.88rem}input,select,textarea{display:block;width:100%;margin-top:7px;padding:11px 12px;border:1px solid #d6deea;border-radius:10px;font:inherit;background:#fff;color:#172033}textarea{min-height:90px;resize:vertical}
+button{border:0;border-radius:10px;padding:11px 15px;cursor:pointer;font-weight:750;background:#172033;color:#fff}button.secondary{background:#eaf0f7;color:#172033}button.danger{background:#f9e9ec;color:#a02e3d}
+.stat span{display:block;color:#6d7788;font-size:.8rem;margin-bottom:8px}.stat strong{font-size:1.45rem}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.muted{color:#6b7586}.hidden{display:none!important}
+.progress{height:14px;background:#e9edf3;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:#172033;transition:.25s}
+.subject,.task,.revision,.mock{border:1px solid #e1e6ef;border-radius:13px;padding:14px;margin:10px 0}.row{display:flex;align-items:center;gap:9px}.row input[type=checkbox]{width:auto;margin:0}.topic{display:grid;grid-template-columns:28px minmax(0,1fr) auto 38px;align-items:center;gap:8px;margin:8px 0}.topic input[type=checkbox]{width:22px;height:22px;margin:0}.topic input[type=text]{margin:0;width:100%;min-width:0}.topic button{white-space:nowrap}.topic .danger{padding:10px}.pill{display:inline-block;background:#eef2f7;border-radius:99px;padding:5px 9px;font-size:.75rem;font-weight:750}
+.small{font-size:.85rem}.empty{padding:18px;border:1px dashed #cfd7e4;border-radius:12px;color:#6d7788;text-align:center}
+footer{text-align:center;color:#7a8494;font-size:.82rem;margin-top:28px}
+@media(max-width:800px){.grid4{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+@media(max-width:500px){
+.grid3,.grid2{grid-template-columns:1fr}
+.container{padding:22px 13px 50px}.card{padding:16px}
+.topic{grid-template-columns:28px minmax(0,1fr) 38px}
+.topic button:nth-of-type(1){grid-column:2;justify-self:start}
+.topic button:nth-of-type(2){grid-column:3;grid-row:1}
 }
 
+.stat{background:#f6f8fc;border:1px solid #e3e8f0;border-radius:14px;padding:14px}.stat span{display:block;color:#6b7280;font-size:.82rem}.stat strong{display:block;font-size:1.35rem;margin-top:5px}
+.mock{border:1px solid #e1e6ee;border-radius:16px;padding:16px;margin:10px 0}.mock p{line-height:1.5}
+
+.mock-validation{margin-top:10px;padding:11px 13px;border-radius:12px;background:#fff1f2;border:1px solid #fecdd3;color:#b42318;font-size:.9rem;font-weight:600;line-height:1.4}
+.mock-validation.hidden{display:none}
 </style>
 </head>
 <body>
-  <main class="container">
-    <header>
-      <p class="eyebrow">Open-source study tool</p>
-      <h1>Exam Study Planner</h1>
-      <p class="subtitle">Plan subjects, track topics, and see your preparation progress — entirely in your browser.</p>
-    </header>
+<main class="container">
+<header>
+<div class="eyebrow">Open-source study tool · v2</div>
+<h1>Exam Study Planner</h1>
+<p class="subtitle">Plan exams, schedule study sessions, track revision, record mock tests and identify weak topics — in your browser.</p>
+</header>
 
-    <section class="card">
-      <h2>Create your exam plan</h2>
-      <div class="form-grid">
-        <label>Exam name
-          <input id="examName" placeholder="e.g. SSC CGL">
-        </label>
-        <label>Target date
-          <input id="targetDate" type="date">
-        </label>
-        <label>Daily study hours
-          <input id="studyHours" type="number" min="0" step="0.5" value="3">
-        </label>
-      </div>
-      <button id="savePlan">Save Plan</button>
-    </section>
+<nav class="tabs">
+<button class="tab active" data-tab="dashboard">Dashboard</button>
+<button class="tab" data-tab="exams">Exams</button>
+<button class="tab" data-tab="subjects">Subjects</button>
+<button class="tab" data-tab="daily">Daily Plan</button>
+<button class="tab" data-tab="revision">Revision</button>
+<button class="tab" data-tab="mocks">Mock Tests</button>
+</nav>
 
-    <section class="stats">
-      <div class="stat card"><span>Exam</span><strong id="statExam">—</strong></div>
-      <div class="stat card"><span>Topics</span><strong id="statTopics">0</strong></div>
-      <div class="stat card"><span>Completed</span><strong id="statCompleted">0</strong></div>
-      <div class="stat card"><span>Progress</span><strong id="statProgress">0%</strong></div>
-    </section>
+<section id="dashboard" class="page">
+<div class="card">
+<div class="section-head"><div><h2>Current exam</h2><p class="muted small">Your active preparation plan</p></div><button class="secondary" id="newExam">+ New Exam</button></div>
+<div id="currentExamBox"></div>
+</div>
+<div class="grid grid4">
+<div class="card stat"><span>Topics</span><strong id="sTopics">0</strong></div>
+<div class="card stat"><span>Completed</span><strong id="sDone">0</strong></div>
+<div class="card stat"><span>Progress</span><strong id="sProgress">0%</strong></div>
+<div class="card stat"><span>Mock average</span><strong id="sAverage">—</strong></div>
+</div>
+<div class="card">
+<h2>Preparation progress</h2><div class="progress"><div id="dashBar" class="bar"></div></div><p id="dashText" class="muted">Add an exam and topics to begin.</p>
+</div>
+<div class="card">
+<h2>Weak topics</h2><div id="weakDashboard"></div>
+</div>
+</section>
 
-    <section class="card">
-      <div class="section-head">
-        <h2>Subjects & topics</h2>
-        <button class="secondary" id="addSubject">+ Add Subject</button>
-      </div>
-      <div id="subjects"></div>
-    </section>
+<section id="exams" class="page hidden">
+<div class="card">
+<h2>Create / edit exam</h2>
+<div class="grid grid3">
+<label>Exam name<input id="examName" placeholder="e.g. SSC CGL"></label>
+<label>Target date<input id="targetDate" type="date"></label>
+<label>Daily study hours<input id="studyHours" type="number" min="0" step=".5" value="3"></label>
+</div><br><button id="saveExam">Save Exam</button>
+</div>
+<div class="card"><h2>Your exams</h2><div id="examList"></div></div>
+</section>
 
-    <section class="card">
-      <h2>Progress</h2>
-      <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
-      <p id="progressText">Add some topics to begin.</p>
-    </section>
+<section id="subjects" class="page hidden">
+<div class="card">
+<div class="section-head"><h2>Subjects & topics</h2><button id="addSubject">+ Add Subject</button></div>
+<div id="subjectList"></div>
+</div>
+</section>
 
-    <footer>
-      <p>Data is stored locally in your browser. No account or server is required.</p>
-    </footer>
-  </main>
-  <script>
-const STORAGE_KEY = "examStudyPlanner.v1";
+<section id="daily" class="page hidden">
+<div class="card">
+<h2>Daily study plan</h2>
+<div class="grid grid3">
+<label>Date<input id="taskDate" type="date"></label>
+<label>Subject<select id="taskSubject"></select></label>
+<label>Study hours<input id="taskHours" type="number" min="0" step=".5" value="1"></label>
+</div>
+<label style="margin-top:14px">Task<input id="taskName" placeholder="e.g. Tenses — practice 30 questions"></label>
+<br><button id="addTask">Add Study Task</button>
+</div>
+<div class="card"><div class="section-head"><h2>Study tasks</h2><span id="taskSummary" class="pill"></span></div><div id="taskList"></div></div>
+</section>
 
-let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
-  examName: "", targetDate: "", studyHours: 3, subjects: []
-};
+<section id="revision" class="page hidden">
+<div class="card">
+<h2>Revision tracker</h2>
+<p class="muted small">Each completed topic gets a simple revision cycle: Rev 1 → Rev 2 → Rev 3.</p>
+<div id="revisionList"></div>
+</div>
+</section>
 
-const $ = id => document.getElementById(id);
+<section id="mocks" class="page hidden">
+<div class="card">
+<h2>Add mock test</h2>
+<div class="grid grid3">
+<label>Date<input id="mockDate" type="date"></label>
+<label>Test name<input id="mockName" placeholder="e.g. SSC CGL Mock 1"></label>
+<label>Section / subject<select id="mockSubject"></select></label>
+</div>
+<div class="grid grid3" style="margin-top:14px">
+<label>Total questions<input id="mockTotal" type="number" min="0" step="1" placeholder="100"></label>
+<label>Correct<input id="mockCorrect" type="number" min="0" step="1" placeholder="80"></label>
+<label>Wrong<input id="mockWrong" type="number" min="0" step="1" placeholder="20"></label><div id="mockValidation" class="mock-validation hidden" role="alert"></div>
+</div>
+<div class="grid grid3" style="margin-top:14px">
+<label>Negative marking
+<select id="mockNegative">
+<option value="0">None (0)</option>
+<option value="0.25">0.25 mark</option>
+<option value="0.5">0.50 mark</option>
+<option value="1">1.00 mark</option>
+</select></label>
+<label>Unattempted<input id="mockUnattempted" type="number" placeholder="Auto" readonly></label>
+<label>Time taken (minutes)<input id="mockTime" type="number" min="0" step="1" placeholder="120"></label>
+</div>
+<div class="grid grid3" style="margin-top:14px">
+<label>Score (%)<input id="mockScore" type="number" min="0" max="100" step="0.01" placeholder="Auto" readonly></label>
+<label>Accuracy (%)<input id="mockAccuracy" type="number" min="0" max="100" step="0.01" placeholder="Auto" readonly></label>
+<label>Marks after negative marking<input id="mockMarks" type="number" placeholder="Auto" readonly></label>
+</div>
+<div id="mockCalcBox" class="mock-validation" style="margin-top:14px" role="status">Enter total, correct and wrong answers.</div>
+<label style="margin-top:14px">Mistakes / lessons<textarea id="mockNotes" placeholder="What went wrong? What will you revise?"></textarea></label>
+<p class="muted small">Accuracy = correct ÷ attempted. Score = (correct − wrong × negative marking) ÷ total × 100.</p><br><button id="addMock">Add Mock Test</button>
+</div>
 
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  render();
+<div class="card">
+<h2>Mock performance</h2>
+<div class="grid grid3">
+<div class="stat"><span>Mocks</span><strong id="mockCount">0</strong></div>
+<div class="stat"><span>Average score</span><strong id="mockAvg">—</strong></div>
+<div class="stat"><span>Best score</span><strong id="mockBest">—</strong></div>
+<div class="stat"><span>Average accuracy</span><strong id="mockAccAvg">—</strong></div>
+</div>
+</div>
+
+<div class="card"><h2>Mock-test history</h2><div id="mockList"></div></div>
+</section>
+
+<footer>Exam Study Planner v2.7 · Data is stored locally in this browser. No account or server is required.</footer>
+</main>
+
+<script>
+const KEY="examStudyPlanner.v2";
+const oldKey="examStudyPlanner.v1";
+let state=JSON.parse(localStorage.getItem(KEY)||"null");
+if(!state){
+ const old=JSON.parse(localStorage.getItem(oldKey)||"null");
+ state={exams:old&&old.examName?[{id:uid(),name:old.examName,targetDate:old.targetDate||"",hours:old.studyHours||3,subjects:old.subjects||[]}]:[],
+ activeExam:old&&old.examName?null:null,tasks:[],mocks:[]};
+ if(state.exams.length)state.activeExam=state.exams[0].id;
+ save();
 }
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function active(){return state.exams.find(e=>e.id===state.activeExam)||state.exams[0]}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function today(){return new Date().toISOString().slice(0,10)}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));document.getElementById(b.dataset.tab).classList.remove("hidden");render()});
 
-function addSubject() {
-  state.subjects.push({ name: "New Subject", topics: [{ name: "New Topic", done: false }] });
-  save();
+function render(){
+ const e=active();
+ renderDashboard(e);renderExams();renderSubjects(e);renderTasks(e);renderRevision(e);renderMocks();
 }
-
-function addTopic(subjectIndex) {
-  state.subjects[subjectIndex].topics.push({ name: "New Topic", done: false });
-  save();
+function renderDashboard(e){
+ let total=0,done=0;
+ (e?.subjects||[]).forEach(s=>(s.topics||[]).forEach(t=>{total++;if(t.done)done++}));
+ const pct=total?Math.round(done/total*100):0;
+ document.getElementById("sTopics").textContent=total;document.getElementById("sDone").textContent=done;document.getElementById("sProgress").textContent=pct+"%";
+ const ms=state.mocks;document.getElementById("sAverage").textContent=ms.length?Math.round(ms.reduce((a,m)=>a+Number(m.score||0),0)/ms.length)+"%":"—";
+ document.getElementById("dashBar").style.width=pct+"%";document.getElementById("dashText").textContent=total?`${done} of ${total} topics completed (${pct}%).`:"Add an exam and topics to begin.";
+ document.getElementById("currentExamBox").innerHTML=e?`<h3>${esc(e.name)}</h3><p class="muted">Target: ${esc(e.targetDate||"Not set")} · ${esc(e.hours)} study hours/day</p>`:`<div class="empty">No exam yet. Create your first exam.</div>`;
+ const weak=[];(e?.subjects||[]).forEach(s=>(s.topics||[]).forEach(t=>{if(t.weak)weak.push(`${s.name} — ${t.name}`)}));
+ document.getElementById("weakDashboard").innerHTML=weak.length?weak.map(x=>`<div class="pill" style="margin:4px">${esc(x)}</div>`).join(""):"<div class='empty'>No weak topics marked.</div>";
 }
-
-function deleteSubject(index) {
-  state.subjects.splice(index, 1);
-  save();
+function renderExams(){
+ const e=active();
+ if(e){examName.value=e.name;targetDate.value=e.targetDate;studyHours.value=e.hours}
+ examList.innerHTML=state.exams.length?state.exams.map(x=>`<div class="task row"><div style="flex:1"><b>${esc(x.name)}</b><div class="muted small">${x.targetDate||"No target date"} · ${x.hours} h/day</div></div><button class="secondary" onclick="setActive('${x.id}')">${x.id===state.activeExam?"Active":"Use"}</button><button class="danger" onclick="delExam('${x.id}')">Delete</button></div>`).join(""):"<div class='empty'>No exams yet.</div>";
 }
-
-function deleteTopic(subjectIndex, topicIndex) {
-  state.subjects[subjectIndex].topics.splice(topicIndex, 1);
-  save();
+function renderSubjects(e){
+ if(e) e.subjects.forEach(s=>(s.topics||[]).forEach(t=>{if(!String(t.name||"").trim())t.name="New Topic"}));
+ subjectList.innerHTML=e?e.subjects.map((s,si)=>`<div class="subject"><div class="row"><input style="margin:0;flex:1;font-weight:750" value="${esc(s.name)}" onchange="renameSubject(${si},this.value)"><button class="danger" onclick="delSubject(${si})">Delete</button></div>
+ ${(s.topics||[]).map((t,ti)=>`<div class="topic"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTopic(${si},${ti},this.checked)"><input type="text" value="${esc(t.name)}" onchange="renameTopic(${si},${ti},this.value)"><button class="${t.weak?"danger":"secondary"}" onclick="toggleWeak(${si},${ti})">${t.weak?"Weak":"Mark weak"}</button><button class="danger" onclick="delTopic(${si},${ti})">×</button></div>`).join("")}
+ <button class="secondary" onclick="addTopic(${si})">+ Add Topic</button></div>`).join(""):"<div class='empty'>Create an exam first.</div>";
+ taskSubject.innerHTML=e?e.subjects.map((s,i)=>`<option value="${i}">${esc(s.name)}</option>`).join(""):"";
 }
-
-function render() {
-  $("examName").value = state.examName;
-  $("targetDate").value = state.targetDate;
-  $("studyHours").value = state.studyHours;
-  $("statExam").textContent = state.examName || "—";
-
-  let total = 0, completed = 0;
-  const container = $("subjects");
-  container.innerHTML = "";
-
-  state.subjects.forEach((subject, si) => {
-    const box = document.createElement("div");
-    box.className = "subject";
-
-    const title = document.createElement("div");
-    title.className = "subject-title";
-
-    const name = document.createElement("input");
-    name.value = subject.name;
-    name.setAttribute("aria-label", "Subject name");
-    name.addEventListener("input", e => {
-      state.subjects[si].name = e.target.value;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    });
-
-    const delSubject = document.createElement("button");
-    delSubject.className = "delete";
-    delSubject.textContent = "Delete";
-    delSubject.onclick = () => deleteSubject(si);
-
-    title.append(name, delSubject);
-    box.appendChild(title);
-
-    subject.topics.forEach((topic, ti) => {
-      total++;
-      if (topic.done) completed++;
-
-      const row = document.createElement("div");
-      row.className = "topic-row";
-
-      const check = document.createElement("input");
-      check.type = "checkbox";
-      check.checked = topic.done;
-      check.addEventListener("change", e => {
-        state.subjects[si].topics[ti].done = e.target.checked;
-        save();
-      });
-
-      const text = document.createElement("input");
-      text.type = "text";
-      text.value = topic.name;
-      text.addEventListener("input", e => {
-        state.subjects[si].topics[ti].name = e.target.value;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      });
-
-      const del = document.createElement("button");
-      del.className = "delete";
-      del.textContent = "×";
-      del.title = "Delete topic";
-      del.onclick = () => deleteTopic(si, ti);
-
-      row.append(check, text, del);
-      box.appendChild(row);
-    });
-
-    const add = document.createElement("button");
-    add.className = "secondary";
-    add.textContent = "+ Add Topic";
-    add.onclick = () => addTopic(si);
-    box.appendChild(add);
-
-    container.appendChild(box);
-  });
-
-  const pct = total ? Math.round((completed / total) * 100) : 0;
-  $("statTopics").textContent = total;
-  $("statCompleted").textContent = completed;
-  $("statProgress").textContent = pct + "%";
-  $("progressBar").style.width = pct + "%";
-  $("progressText").textContent = total
-    ? `${completed} of ${total} topics completed (${pct}%).`
-    : "Add some topics to begin.";
+function renderTasks(e){
+ const tasks=state.tasks.filter(t=>!e||t.examId===e.id);
+ taskSummary.textContent=tasks.filter(t=>t.done).length+"/"+tasks.length+" done";
+ taskList.innerHTML=tasks.length?tasks.map(t=>`<div class="task row"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTask('${t.id}',this.checked)"><div style="flex:1"><b>${esc(t.name)}</b><div class="muted small">${t.date} · ${t.hours} h · ${esc(t.subject||"")}</div></div><button class="danger" onclick="delTask('${t.id}')">Delete</button></div>`).join(""):"<div class='empty'>No study tasks yet.</div>";
 }
-
-$("savePlan").onclick = () => {
-  state.examName = $("examName").value.trim();
-  state.targetDate = $("targetDate").value;
-  state.studyHours = Number($("studyHours").value) || 0;
-  save();
-};
-
-$("addSubject").onclick = addSubject;
-
-render();
-
+function renderRevision(e){
+ let arr=[];
+ (e?.subjects||[]).forEach((s,si)=>(s.topics||[]).forEach((t,ti)=>{
+   arr.push({s,si,t,ti});
+ }));
+ revisionList.innerHTML=arr.length?arr.map(x=>{
+   const done=!!x.t.done;
+   const rev=x.t.rev||[];
+   return `<div class="revision">
+     <div class="section-head">
+       <b>${esc(x.s.name)} — ${esc(x.t.name)}</b>
+       <span class="pill">${done?"Completed":"Not completed"}</span>
+     </div>
+     ${done
+       ? `<div class="row" style="margin-top:10px">${[0,1,2].map(n=>`<label class="small"><input type="checkbox" ${rev[n]?"checked":""} onchange="toggleRev(${x.si},${x.ti},${n},this.checked)"> Revision ${n+1}</label>`).join("")}</div>`
+       : `<div class="muted small" style="margin-top:10px">Complete this topic in Subjects to unlock its revision cycle.</div>`
+     }
+   </div>`;
+ }).join(""):"<div class='empty'>Add subjects and topics to begin revision.</div>";
+}
+function renderMocks(){
+ const subjects=(active()?.subjects||[]).map(s=>s.name);
+ mockSubject.innerHTML=subjects.length?subjects.map(s=>`<option>${esc(s)}</option>`).join(""):`<option>General</option>`;
+ const ms=state.mocks;
+ const avg=ms.length?Math.round(ms.reduce((a,m)=>a+Number(m.score||0),0)/ms.length):null;
+ const best=ms.length?Math.max(...ms.map(m=>Number(m.score||0))):null;
+ const accs=ms.filter(m=>m.accuracy!==null&&m.accuracy!==undefined&&!Number.isNaN(Number(m.accuracy)));
+ const accAvg=accs.length?Math.round(accs.reduce((a,m)=>a+Number(m.accuracy),0)/accs.length):null;
+ mockCount.textContent=ms.length;
+ mockAvg.textContent=avg===null?"—":avg+"%";
+ mockBest.textContent=best===null?"—":best+"%";
+ mockAccAvg.textContent=accAvg===null?"—":accAvg+"%";
+ mockList.innerHTML=ms.length?ms.slice().reverse().map(m=>`<div class="mock">
+ <div class="section-head"><b>${esc(m.name)}</b><span class="pill">${Number(m.score||0)}%</span></div>
+ <div class="muted small">${esc(m.date)} · ${esc(m.subject||"General")}</div>
+ <div class="small" style="margin-top:8px">
+ ${m.total?`Questions: ${m.total} · Correct: ${m.correct??"—"} · Wrong: ${m.wrong??"—"} · Unattempted: ${m.unattempted??Math.max(0,Number(m.total)-Number(m.correct||0)-Number(m.wrong||0))} · Accuracy: ${m.accuracy??"—"}%${m.negative?` · −${m.negative} mark/wrong`:""}`:"Score recorded"}
+ ${m.time?` · Time: ${m.time} min`:""}
+ </div>
+ ${m.notes?`<p class="small"><b>Lessons:</b> ${esc(m.notes)}</p>`:""}
+ <button class="danger small" onclick="delMock('${m.id}')">Delete</button>
+ </div>`).join(""):"<div class='empty'>No mock tests recorded yet.</div>";
+}
+function setActive(id){state.activeExam=id;save();render()}
+function delExam(id){state.exams=state.exams.filter(e=>e.id!==id);if(state.activeExam===id)state.activeExam=state.exams[0]?.id||null;state.tasks=state.tasks.filter(t=>t.examId!==id);save();render()}
+newExam.onclick=()=>{document.querySelector('[data-tab=exams]').click();examName.value="";targetDate.value="";studyHours.value=3}
+saveExam.onclick=()=>{const n=examName.value.trim();if(!n)return alert("Enter an exam name.");let e=active();if(!e){e={id:uid(),name:n,targetDate:targetDate.value,hours:Number(studyHours.value)||0,subjects:[]};state.exams.push(e);state.activeExam=e.id}else{e.name=n;e.targetDate=targetDate.value;e.hours=Number(studyHours.value)||0}save();render()}
+addSubject.onclick=()=>{const e=active();if(!e)return alert("Create an exam first.");e.subjects.push({name:"New Subject",topics:[{name:"New Topic",done:false,weak:false,rev:[false,false,false]}]});save();render()}
+function renameSubject(i,v){active().subjects[i].name=v;save()}
+function renameTopic(si,ti,v){active().subjects[si].topics[ti].name=v;save()}
+function toggleTopic(si,ti,v){active().subjects[si].topics[ti].done=v;save();render()}
+function toggleWeak(si,ti){active().subjects[si].topics[ti].weak=!active().subjects[si].topics[ti].weak;save();render()}
+function toggleRev(si,ti,n,v){const t=active().subjects[si].topics[ti];t.rev=t.rev||[false,false,false];t.rev[n]=v;save()}
+function delSubject(i){active().subjects.splice(i,1);save();render()}
+function addTopic(si){active().subjects[si].topics.push({name:"New Topic",done:false,weak:false,rev:[false,false,false]});save();render()}
+function delTopic(si,ti){active().subjects[si].topics.splice(ti,1);save();render()}
+addTask.onclick=()=>{const e=active();if(!e)return alert("Create an exam first.");const n=taskName.value.trim();if(!n)return alert("Enter a task.");const si=Number(taskSubject.value);state.tasks.push({id:uid(),examId:e.id,date:taskDate.value||today(),subject:e.subjects[si]?.name||"",hours:Number(taskHours.value)||0,name:n,done:false});taskName.value="";save();render()}
+function toggleTask(id,v){const t=state.tasks.find(x=>x.id===id);if(t)t.done=v;save();render()}
+function delTask(id){state.tasks=state.tasks.filter(x=>x.id!==id);save();render()}
+function updateMockCalculations(){
+ const total=Number(mockTotal.value)||0, correct=Number(mockCorrect.value)||0, wrong=Number(mockWrong.value)||0;
+ const neg=Number(mockNegative.value)||0;
+ const attempted=correct+wrong;
+ const unattempted=total-attempted;
+ mockValidation.classList.add("hidden");
+ mockCalcBox.className="mock-validation";
+ mockUnattempted.value="";
+ mockScore.value="";
+ mockAccuracy.value="";
+ mockMarks.value="";
+ if(!total && !correct && !wrong){mockCalcBox.textContent="Enter total, correct and wrong answers.";return}
+ if(total<=0){mockCalcBox.textContent="⚠️ Enter a total number of questions greater than 0.";return}
+ if(correct<0||wrong<0){mockCalcBox.textContent="⚠️ Correct and Wrong cannot be negative.";return}
+ if(correct>total||wrong>total||attempted>total){
+   const excess=Math.max(0,attempted-total);
+   mockCalcBox.className="mock-validation";
+   mockCalcBox.innerHTML=attempted>total
+    ? `⚠️ <b>Invalid entries:</b> ${correct} correct + ${wrong} wrong = ${attempted} attempted, but the test has only ${total} questions. You have exceeded the maximum by ${excess} question${excess===1?"":"s"}.`
+    : "⚠️ Correct or Wrong cannot exceed the total number of questions.";
+   return;
+ }
+ mockUnattempted.value=unattempted;
+ const accuracy=attempted?(correct/attempted*100):0;
+ const marks=correct-(wrong*neg);
+ const score=Math.max(0,marks/total*100);
+ mockScore.value=score.toFixed(2);
+ mockAccuracy.value=accuracy.toFixed(2);
+ mockMarks.value=marks.toFixed(2);
+ mockCalcBox.innerHTML=`✅ Valid: <b>${attempted}</b> attempted · <b>${unattempted}</b> unattempted · <b>${correct}</b> correct · <b>${wrong}</b> wrong`;
+}
+[mockTotal,mockCorrect,mockWrong,mockNegative].forEach(x=>x.addEventListener("input",updateMockCalculations));
+[mockTotal,mockCorrect,mockWrong,mockNegative].forEach(x=>x.addEventListener("change",updateMockCalculations));
+addMock.onclick=()=>{
+ const n=mockName.value.trim(), total=Number(mockTotal.value)||0, correct=Number(mockCorrect.value)||0, wrong=Number(mockWrong.value)||0;
+ const neg=Number(mockNegative.value)||0;
+ const attempted=correct+wrong;
+ if(!n)return alert("Enter the test name.");
+ if(total<=0)return alert("Enter total questions greater than 0.");
+ if(correct<0||wrong<0||correct>total||wrong>total||attempted>total){
+   updateMockCalculations();
+   return alert("Please correct the invalid question counts before saving.");
+ }
+ const score=Number(mockScore.value)||0;
+ const accuracy=attempted?Math.round(correct/attempted*10000)/100:null;
+ const marks=correct-(wrong*neg);
+ state.mocks.push({id:uid(),date:mockDate.value||today(),name:n,subject:mockSubject.value||"General",total,correct,wrong,unattempted:total-attempted,negative:neg,marks,score,accuracy,time:Number(mockTime.value)||0,notes:mockNotes.value.trim()});
+ mockName.value="";mockTotal.value="";mockCorrect.value="";mockWrong.value="";mockNegative.value="0";mockUnattempted.value="";mockScore.value="";mockAccuracy.value="";mockMarks.value="";mockTime.value="";mockNotes.value="";
+ updateMockCalculations(); save(); render()
+}
+function delMock(id){state.mocks=state.mocks.filter(x=>x.id!==id);save();render()}
+taskDate.value=today();mockDate.value=today();render();
 </script>
 </body>
 </html>
