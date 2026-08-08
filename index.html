@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exam Study Planner</title>
+  <style>
+* { box-sizing: border-box; }
+body {
+  margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f7fb; color: #172033;
+}
+.container { max-width: 950px; margin: auto; padding: 32px 18px 60px; }
+header { margin-bottom: 24px; }
+.eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; font-weight: 700; opacity: .65; }
+h1 { font-size: clamp(2rem, 6vw, 3.4rem); margin: 5px 0 10px; }
+h2 { margin-top: 0; }
+.subtitle { max-width: 680px; color: #5e687a; line-height: 1.6; }
+.card {
+  background: white; border: 1px solid #e4e8f0; border-radius: 16px;
+  padding: 20px; margin-bottom: 18px; box-shadow: 0 5px 20px rgba(20,30,50,.04);
+}
+.form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+label { font-weight: 650; font-size: .9rem; }
+input {
+  display: block; width: 100%; margin-top: 7px; padding: 11px 12px;
+  border: 1px solid #d8deea; border-radius: 10px; font: inherit;
+}
+button {
+  border: 0; border-radius: 10px; padding: 11px 16px; cursor: pointer;
+  font-weight: 700; background: #172033; color: white;
+}
+button.secondary { background: #edf1f7; color: #172033; }
+.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat span { display:block; color:#6c7483; font-size:.8rem; margin-bottom:8px; }
+.stat strong { font-size: 1.35rem; }
+.section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px; }
+.subject {
+  border: 1px solid #e1e5ec; border-radius: 12px; padding: 15px; margin-bottom: 12px;
+}
+.subject-title { display:flex; gap:10px; align-items:center; margin-bottom:12px; }
+.subject-title input { margin:0; flex:1; font-weight:700; }
+.topic-row { display:flex; align-items:center; gap:9px; margin:8px 0; }
+.topic-row input[type="text"] { margin:0; flex:1; }
+.topic-row input[type="checkbox"] { width:auto; margin:0; }
+.delete { background: transparent; color:#9b3341; padding:6px 8px; }
+.progress-track { height: 16px; background:#edf0f5; border-radius:99px; overflow:hidden; }
+.progress-bar { height:100%; width:0%; transition:width .25s ease; }
+#progressText { color:#606a7a; }
+footer { text-align:center; color:#7a8290; font-size:.85rem; margin-top:25px; }
+@media (max-width: 700px) {
+  .form-grid, .stats { grid-template-columns: 1fr 1fr; }
+  .form-grid label:first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 480px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+  .section-head { align-items:flex-start; flex-direction:column; }
+}
+
+</style>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <p class="eyebrow">Open-source study tool</p>
+      <h1>Exam Study Planner</h1>
+      <p class="subtitle">Plan subjects, track topics, and see your preparation progress — entirely in your browser.</p>
+    </header>
+
+    <section class="card">
+      <h2>Create your exam plan</h2>
+      <div class="form-grid">
+        <label>Exam name
+          <input id="examName" placeholder="e.g. SSC CGL">
+        </label>
+        <label>Target date
+          <input id="targetDate" type="date">
+        </label>
+        <label>Daily study hours
+          <input id="studyHours" type="number" min="0" step="0.5" value="3">
+        </label>
+      </div>
+      <button id="savePlan">Save Plan</button>
+    </section>
+
+    <section class="stats">
+      <div class="stat card"><span>Exam</span><strong id="statExam">—</strong></div>
+      <div class="stat card"><span>Topics</span><strong id="statTopics">0</strong></div>
+      <div class="stat card"><span>Completed</span><strong id="statCompleted">0</strong></div>
+      <div class="stat card"><span>Progress</span><strong id="statProgress">0%</strong></div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <h2>Subjects & topics</h2>
+        <button class="secondary" id="addSubject">+ Add Subject</button>
+      </div>
+      <div id="subjects"></div>
+    </section>
+
+    <section class="card">
+      <h2>Progress</h2>
+      <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+      <p id="progressText">Add some topics to begin.</p>
+    </section>
+
+    <footer>
+      <p>Data is stored locally in your browser. No account or server is required.</p>
+    </footer>
+  </main>
+  <script>
+const STORAGE_KEY = "examStudyPlanner.v1";
+
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+  examName: "", targetDate: "", studyHours: 3, subjects: []
+};
+
+const $ = id => document.getElementById(id);
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  render();
+}
+
+function addSubject() {
+  state.subjects.push({ name: "New Subject", topics: [{ name: "New Topic", done: false }] });
+  save();
+}
+
+function addTopic(subjectIndex) {
+  state.subjects[subjectIndex].topics.push({ name: "New Topic", done: false });
+  save();
+}
+
+function deleteSubject(index) {
+  state.subjects.splice(index, 1);
+  save();
+}
+
+function deleteTopic(subjectIndex, topicIndex) {
+  state.subjects[subjectIndex].topics.splice(topicIndex, 1);
+  save();
+}
+
+function render() {
+  $("examName").value = state.examName;
+  $("targetDate").value = state.targetDate;
+  $("studyHours").value = state.studyHours;
+  $("statExam").textContent = state.examName || "—";
+
+  let total = 0, completed = 0;
+  const container = $("subjects");
+  container.innerHTML = "";
+
+  state.subjects.forEach((subject, si) => {
+    const box = document.createElement("div");
+    box.className = "subject";
+
+    const title = document.createElement("div");
+    title.className = "subject-title";
+
+    const name = document.createElement("input");
+    name.value = subject.name;
+    name.setAttribute("aria-label", "Subject name");
+    name.addEventListener("input", e => {
+      state.subjects[si].name = e.target.value;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    });
+
+    const delSubject = document.createElement("button");
+    delSubject.className = "delete";
+    delSubject.textContent = "Delete";
+    delSubject.onclick = () => deleteSubject(si);
+
+    title.append(name, delSubject);
+    box.appendChild(title);
+
+    subject.topics.forEach((topic, ti) => {
+      total++;
+      if (topic.done) completed++;
+
+      const row = document.createElement("div");
+      row.className = "topic-row";
+
+      const check = document.createElement("input");
+      check.type = "checkbox";
+      check.checked = topic.done;
+      check.addEventListener("change", e => {
+        state.subjects[si].topics[ti].done = e.target.checked;
+        save();
+      });
+
+      const text = document.createElement("input");
+      text.type = "text";
+      text.value = topic.name;
+      text.addEventListener("input", e => {
+        state.subjects[si].topics[ti].name = e.target.value;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      });
+
+      const del = document.createElement("button");
+      del.className = "delete";
+      del.textContent = "×";
+      del.title = "Delete topic";
+      del.onclick = () => deleteTopic(si, ti);
+
+      row.append(check, text, del);
+      box.appendChild(row);
+    });
+
+    const add = document.createElement("button");
+    add.className = "secondary";
+    add.textContent = "+ Add Topic";
+    add.onclick = () => addTopic(si);
+    box.appendChild(add);
+
+    container.appendChild(box);
+  });
+
+  const pct = total ? Math.round((completed / total) * 100) : 0;
+  $("statTopics").textContent = total;
+  $("statCompleted").textContent = completed;
+  $("statProgress").textContent = pct + "%";
+  $("progressBar").style.width = pct + "%";
+  $("progressText").textContent = total
+    ? `${completed} of ${total} topics completed (${pct}%).`
+    : "Add some topics to begin.";
+}
+
+$("savePlan").onclick = () => {
+  state.examName = $("examName").value.trim();
+  state.targetDate = $("targetDate").value;
+  state.studyHours = Number($("studyHours").value) || 0;
+  save();
+};
+
+$("addSubject").onclick = addSubject;
+
+render();
+
+</script>
+</body>
+</html>
