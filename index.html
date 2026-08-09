@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6d5dfc">
+<title>Exam Study Planner V3.3 • Subject Auto-Syllabus</title>
+<style>
+:root{
+  --bg:#f5f7ff;--card:#fff;--text:#17213b;--muted:#6e7891;--line:#e7eaf4;
+  --primary:#6d5dfc;--primary2:#8f7cff;--cyan:#18b9e8;--green:#19c58b;
+  --orange:#ff9f43;--pink:#f05aa6;--red:#ef5b70;--shadow:0 12px 35px rgba(37,45,90,.10);
+}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text)}
+button,input,select{font:inherit}button{cursor:pointer;border:0}
+.app{max-width:1180px;margin:auto;padding:18px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#6d5dfc,#19c8e8);color:#fff;display:grid;place-items:center;font-weight:900;font-size:21px;box-shadow:0 10px 24px #6d5dfc33}
+h1{font-size:24px;margin:0}.sub{color:var(--muted);font-size:12px;margin-top:3px}
+.iconbtn{width:42px;height:42px;border-radius:14px;background:#fff;box-shadow:var(--shadow);color:var(--text)}
+.nav{display:flex;gap:8px;overflow:auto;padding-bottom:6px;margin-bottom:18px}.nav button{white-space:nowrap;padding:11px 16px;border-radius:14px;background:#e9edfb;color:#43506e;font-weight:700}.nav button.active{background:linear-gradient(135deg,#6d5dfc,#8b76ff);color:#fff;box-shadow:0 8px 18px #6d5dfc35}
+.hero{background:linear-gradient(135deg,#211d52 0%,#5d49e9 55%,#1abfe6 130%);color:#fff;border-radius:26px;padding:24px;position:relative;overflow:hidden;box-shadow:var(--shadow);margin-bottom:18px}
+.hero:after{content:"";position:absolute;width:210px;height:210px;border-radius:50%;right:-70px;top:-85px;background:#ffffff16}.hero h2{margin:0 0 6px;font-size:26px}.hero p{margin:0;color:#e9e8ff}.heroRow{display:flex;justify-content:space-between;align-items:center;gap:18px}.heroActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.whiteBtn{background:#fff;color:#4b3fd0;padding:10px 15px;border-radius:12px;font-weight:800}.glassBtn{background:#ffffff18;color:#fff;border:1px solid #ffffff35;padding:10px 15px;border-radius:12px;font-weight:800}
+.grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(4,1fr)}.two{grid-template-columns:1.35fr 1fr}.three{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}.card h3{margin:0 0 14px;font-size:16px}.kpi{position:relative;overflow:hidden}.kpi .label{font-size:12px;color:var(--muted);font-weight:700}.kpi .value{font-size:28px;font-weight:900;margin-top:5px}.kpi .delta{font-size:11px;color:var(--green);font-weight:800;margin-top:4px}.bubble{position:absolute;right:14px;top:14px;width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:#fff;font-weight:900}.b1{background:linear-gradient(135deg,#6d5dfc,#9b8dff)}.b2{background:linear-gradient(135deg,#18b9e8,#55d8f6)}.b3{background:linear-gradient(135deg,#19c58b,#62ddb1)}.b4{background:linear-gradient(135deg,#ff9f43,#ffc36e)}
+.progress{height:11px;background:#edf0f8;border-radius:99px;overflow:hidden}.progress>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#6d5dfc,#18c9e7)}
+.ring{width:145px;height:145px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#6d5dfc var(--p),#eceef7 0);position:relative;margin:auto}.ring:after{content:"";position:absolute;width:105px;height:105px;border-radius:50%;background:#fff}.ring span{position:relative;z-index:2;font-size:27px;font-weight:900}
+.statline{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);margin:9px 0}.barrow{margin:12px 0}.barhead{display:flex;justify-content:space-between;font-size:12px;font-weight:800;margin-bottom:6px}.bar{height:9px;background:#eef0f7;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#6d5dfc,#f05aa6)}
+.chart{height:190px;display:flex;align-items:flex-end;gap:9px;padding:18px 6px 5px}.col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:6px}.col i{width:70%;max-width:36px;border-radius:9px 9px 3px 3px;background:linear-gradient(180deg,#18b9e8,#6d5dfc);min-height:5px}.col span{font-size:10px;color:var(--muted)}.col b{font-size:9px;color:var(--muted)}
+.list{display:grid;gap:9px}.item{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid var(--line);border-radius:14px}.dot{width:10px;height:10px;border-radius:50%;background:var(--primary);flex:none}.itemMain{flex:1}.itemMain strong{display:block;font-size:13px}.itemMain small{color:var(--muted)}.pill{font-size:10px;font-weight:800;padding:5px 8px;border-radius:99px;background:#eef0ff;color:#5a4dde}.green{background:#e6faf3;color:#0d9a6a}.orange{background:#fff3e5;color:#d77b10}.pink{background:#ffeaf5;color:#c13c7d}.revision-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.revbox{display:flex;align-items:center;gap:7px;padding:10px;border-radius:12px;background:#f4f6ff;color:#465170;font-size:12px;font-weight:800}.revbox input{width:18px;height:18px}.pending{margin-top:10px;padding:11px 12px;border-radius:12px;background:#fff5e8;color:#b36b0c;font-size:12px;font-weight:700}.subjectGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.subjectCard{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:15px;background:#fbfcff}.subjectCard .subjectInfo{flex:1;min-width:0}.subjectCard .subjectName{font-weight:900;font-size:13px}.subjectCard .subjectMeta{font-size:10px;color:var(--muted);margin-top:3px}.subjectActions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.miniBtn{background:#eef1ff;color:#5148bf;padding:7px 9px;border-radius:9px;font-size:11px;font-weight:800}.miniDanger{background:#ffe8ed;color:#c33e56;padding:7px 9px;border-radius:9px;font-size:11px;font-weight:800}@media(max-width:700px){.subjectGrid{grid-template-columns:1fr}}.subjectAdd{margin-top:10px}.mockStats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}.mockStat{padding:10px;border-radius:12px;background:#f5f7ff}.mockStat small{display:block;color:var(--muted);font-size:10px}.mockStat b{display:block;margin-top:3px}.invalid{background:#fff0f2!important;color:#b42318!important}.valid{background:#e9faf4!important;color:#0d9a6a!important}@media(max-width:520px){.revision-grid,.mockStats{grid-template-columns:1fr}}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.quick button{padding:13px 8px;border-radius:14px;background:#f0f2ff;color:#4f45b8;font-weight:800}.quick button:nth-child(2){background:#e9fbff;color:#078aaa}.quick button:nth-child(3){background:#eafaf4;color:#07875e}.quick button:nth-child(4){background:#fff1e4;color:#c97813}
+.section{display:none}.section.active{display:block}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.primary{background:linear-gradient(135deg,#6d5dfc,#8b76ff);color:#fff;padding:11px 15px;border-radius:12px;font-weight:800}.danger{background:#ffe8ed;color:#c33e56;padding:8px 11px;border-radius:10px;font-weight:800}
+.examSwitch{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:7px 10px;box-shadow:var(--shadow)}
+.examSwitch label{font-size:11px;color:var(--muted);font-weight:800;white-space:nowrap}.examSwitch select{border:0;background:transparent;color:var(--text);font-weight:800;outline:none;max-width:190px}
+.examCardActive{border:2px solid #6d5dfc;box-shadow:0 12px 30px #6d5dfc22}.examBadge{display:inline-block;padding:5px 9px;border-radius:999px;background:#eeeaff;color:#5a4de0;font-size:10px;font-weight:900}
+@media(max-width:700px){.examSwitch{order:3;width:100%;justify-content:space-between}.examSwitch select{max-width:240px}.secondary{background:#eef1fb;color:#43506e;padding:9px 12px;border-radius:11px;font-weight:800}.secondary:hover{background:#e5e9f8}
+.formgrid{grid-template-columns:1fr}}
+.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.field{display:grid;gap:5px}.field label{font-size:11px;color:var(--muted);font-weight:800}.field input,.field select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;outline:none}.field input:focus,.field select:focus{border-color:#8d80ff;box-shadow:0 0 0 3px #6d5dfc14}
+.modal{position:fixed;inset:0;background:#11162c99;display:none;align-items:flex-start;justify-content:center;padding:18px;z-index:20;overflow-y:auto;-webkit-overflow-scrolling:touch}.modal.show{display:flex}.modalbox{background:#fff;border-radius:22px;padding:20px;width:min(520px,100%);max-height:calc(100dvh - 36px);overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 25px 70px #0003;margin:auto 0}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;position:sticky;top:0;background:#fff;z-index:2;padding-bottom:8px}.modalhead h3{margin:0}.close{background:#f0f2f8;border-radius:10px;width:36px;height:36px;flex:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#17213b;color:#fff;padding:12px 16px;border-radius:12px;opacity:0;transition:.25s;z-index:30;font-size:13px}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.footer{text-align:center;color:#8a92a8;font-size:10px;padding:20px 0}
+@media(max-width:850px){.kpis{grid-template-columns:repeat(2,1fr)}.two,.three{grid-template-columns:1fr}.heroRow{align-items:flex-start;flex-direction:column}.quick{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.app{padding:11px}.card{padding:14px;border-radius:17px}.hero{padding:19px;border-radius:21px}.kpi .value{font-size:24px}.formgrid{grid-template-columns:1fr}.topbar{margin-bottom:12px}}
+
+.examPatternGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.patternStage{padding:14px;border:1px solid var(--line);border-radius:16px;background:#fbfcff}
+.patternStage .stageTitle{font-weight:900;font-size:14px}
+.patternStage .stageMeta{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+.patternTag{display:inline-block;margin-top:8px;padding:5px 8px;border-radius:999px;background:#eeeaff;color:#5a4de0;font-size:10px;font-weight:900}
+.patternTable{width:100%;border-collapse:collapse;font-size:12px}
+.patternTable th,.patternTable td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left}
+.patternTable th{color:var(--muted);font-size:10px;text-transform:uppercase}
+.planDay{border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff;margin-bottom:12px}
+.planDayHead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.planDayTitle{font-weight:900;font-size:16px}
+.planDayMeta{font-size:11px;color:var(--muted);margin-top:3px}
+.planSession{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #eef0f6}
+.planSession:first-child{margin-top:10px}
+.sessionTime{min-width:54px;font-weight:900;color:#5a4dde;font-size:11px}
+.sessionMain{flex:1}
+.sessionMain strong{display:block;font-size:12px}
+.sessionMain small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.planActions{display:flex;gap:6px;flex-wrap:wrap}
+.planDay .miniBtn,.planDay .miniDanger{padding:6px 8px}
+.planToolbar{display:flex;gap:8px;flex-wrap:wrap}
+.planNote{padding:12px;border-radius:14px;background:#f7f5ff;border:1px solid #ddd8ff;font-size:11px;color:#5b5680;line-height:1.5}
+@media(max-width:850px){.examPatternGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.examPatternGrid{grid-template-columns:1fr}.patternTable{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><div class="logo">EP</div><div><h1>Exam Study Planner</h1><div class="sub">V3.4 • Multi-Exam Smart MIS Dashboard • 2026 Pattern + 50-Day Plan</div></div></div>
+    <div class="examSwitch"><label>ACTIVE EXAM</label><select id="examSwitcher" onchange="setActiveExam(this.value)"></select></div>
+    <button class="iconbtn" onclick="toggleTheme()" title="Toggle theme">☼</button>
+  </div>
+
+  <nav class="nav" id="nav">
+    <button class="active" data-tab="dashboard">Dashboard</button>
+    <button data-tab="exams">Exams</button>
+    <button data-tab="subjects">Subjects</button>
+    <button data-tab="pattern">Exam Pattern</button>
+    <button data-tab="plan50">50-Day Plan</button>
+    <button data-tab="daily">Daily Plan</button>
+    <button data-tab="revision">Revision</button>
+    <button data-tab="mocks">Mock Tests</button>
+    <button data-tab="mis">MIS & Analytics</button>
+  </nav>
+
+  <section class="section active" id="dashboard">
+    <div class="hero">
+      <div class="heroRow">
+        <div><h2 id="welcome">Your preparation command centre</h2><p id="heroText">Track your exam, study time, topics, revision and mock performance in one place.</p></div>
+        <div class="ring" id="heroRing" style="--p:50%"><span id="heroPct">50%</span></div>
+      </div>
+      <div class="heroActions">
+        <button class="whiteBtn" onclick="openModal('exam')">＋ Add Exam</button>
+        <button class="glassBtn" onclick="openModal('task')">＋ Study Task</button>
+        <button class="glassBtn" onclick="openModal('mock')">＋ Record Mock</button>
+      </div>
+    </div>
+
+    <div class="grid kpis">
+      <div class="card kpi"><div class="bubble b1">📚</div><div class="label">TOPICS</div><div class="value" id="kTopics">2</div><div class="delta" id="kTopicDelta">1 completed</div></div>
+      <div class="card kpi"><div class="bubble b2">⏱</div><div class="label">STUDY HOURS</div><div class="value" id="kHours">0h</div><div class="delta">this week</div></div>
+      <div class="card kpi"><div class="bubble b3">🎯</div><div class="label">TASK COMPLETION</div><div class="value" id="kTasks">0%</div><div class="delta">today</div></div>
+      <div class="card kpi"><div class="bubble b4">🏆</div><div class="label">MOCK AVERAGE</div><div class="value" id="kMock">—</div><div class="delta">latest performance</div></div>
+    </div>
+
+    <div class="grid two" style="margin-top:14px">
+      <div class="card"><h3>📈 Weekly study activity</h3><div class="chart" id="studyChart"></div></div>
+      <div class="card"><h3>🎯 Preparation progress</h3><div class="ring" id="mainRing" style="--p:50%"><span id="mainPct">50%</span></div><div class="statline"><span>Completed topics</span><b id="completedText">1 of 2</b></div><div class="progress"><i id="mainProgress" style="width:50%"></i></div></div>
+    </div>
+
+    <div class="grid two" style="margin-top:14px">
+      <div class="card"><h3>📊 Subject performance</h3><div id="subjectBars"></div></div>
+      <div class="card"><h3>⚡ Quick actions</h3><div class="quick">
+        <button onclick="go('subjects')">Manage Topics</button><button onclick="go('daily')">Plan Study</button>
+        <button onclick="go('revision')">Start Revision</button><button onclick="go('mocks')">Mock Analysis</button>
+      </div><div style="height:12px"></div><h3>🔔 Next actions</h3><div class="list" id="nextActions"></div></div>
+    </div>
+  </section>
+
+  <section class="section" id="exams">
+    <div class="toolbar"><div><h2 style="margin:0">Exams</h2><div class="sub">Manage targets and preparation plans.</div></div><button class="primary" onclick="openModal('exam')">＋ Add Exam</button></div>
+    <div class="grid three" id="examList"></div>
+  </section>
+
+  <section class="section" id="subjects">
+    <div class="toolbar"><div><h2 style="margin:0">Subjects & Topics</h2><div class="sub">Default subjects are loaded for the selected exam. You can add, edit or delete them anytime.</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="secondary" onclick="openModal('subject')">＋ Add Subject</button><button class="primary" onclick="openModal('topic')">＋ Add Topic</button></div></div>
+    <div class="card" style="margin-bottom:14px"><div class="section-head"><div><h3 style="margin:0">📚 <span id="subjectExamTitle"></span> — Default Subjects</h3><div class="sub">Starter syllabus subjects for this exam. Your changes are saved only in this browser.</div></div></div><div id="subjectList" class="subjectGrid" style="margin-top:12px"></div></div>
+    <div id="syllabusNote" class="card" style="margin-bottom:14px;background:#f7f5ff;border-color:#ddd8ff"><h3 style="margin-bottom:6px">📌 SSC CGL General Awareness — notification-based structure</h3><div class="sub">The SSC notification gives the broad GA heads as Current Events, History, Culture, Geography, Economic Scene, General Policy and Scientific Research. The detailed items are study-planning subtopics under those official heads; they are not separate SSC notification headings.</div></div>
+    <div class="grid two"><div class="card"><h3>📖 Syllabus tracker</h3><div id="topicList"></div></div><div class="card"><h3>⚠️ Weak topics</h3><div id="weakList"></div></div></div>
+  </section>
+
+
+  <section class="section" id="pattern">
+    <div class="toolbar">
+      <div><h2 style="margin:0">Exam Pattern</h2>
+      <div class="sub">2026 planning baseline for the selected exam. Update this profile when a future notification changes the pattern.</div></div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head">
+        <div><h3 style="margin:0">🎯 <span id="patternExamTitle"></span> — 2026 Selection Pattern</h3>
+        <div class="sub" id="patternSummary"></div></div>
+        <span class="patternTag">2026 BASELINE</span>
+      </div>
+    </div>
+    <div class="examPatternGrid" id="patternStages"></div>
+    <div class="card" style="margin-top:14px">
+      <h3>📊 Stage-wise exam details</h3>
+      <div style="overflow:auto"><table class="patternTable">
+        <thead><tr><th>Stage</th><th>Type</th><th>Questions</th><th>Marks</th><th>Duration</th><th>Negative</th><th>Status</th></tr></thead>
+        <tbody id="patternRows"></tbody>
+      </table></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="section-head"><div><h3 style="margin:0">🎯 Cut-off / Target Tracker</h3><div class="sub">Reference values are kept editable because cut-offs vary by year, category and stage.</div></div>
+      <button class="secondary" onclick="openModal('cutoff')">＋ Add / Edit</button></div>
+      <div style="overflow:auto;margin-top:10px"><table class="patternTable">
+        <thead><tr><th>Stage</th><th>Category</th><th>Reference Cut-off</th><th>My Target</th><th>Notes</th></tr></thead>
+        <tbody id="cutoffRows"></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section class="section" id="plan50">
+    <div class="toolbar">
+      <div><h2 style="margin:0">50-Day Study Plan</h2><div class="sub">Default timetable for the selected exam. Edit, delete or add study blocks without losing the default structure.</div></div>
+      <div class="planToolbar">
+        <button class="secondary" onclick="reset50DayPlan()">↻ Reset Default</button>
+        <button class="primary" onclick="openModal('planSession')">＋ Add Study Block</button>
+      </div>
+    </div>
+    <div class="planNote" style="margin-bottom:14px">
+      <b>How it works:</b> V3.4 creates a 50-day starter timetable from the selected exam's default subjects and available syllabus topics. Every block is editable. You can add extra blocks, delete blocks, or rebuild the original 50-day template.
+    </div>
+    <div id="plan50List"></div>
+  </section>
+
+  <section class="section" id="daily">
+    <div class="toolbar"><div><h2 style="margin:0">Daily Plan</h2><div class="sub">Turn your target into actionable study sessions.</div></div><button class="primary" onclick="openModal('task')">＋ Add Task</button></div>
+    <div class="card"><div class="list" id="taskList"></div></div>
+  </section>
+
+  <section class="section" id="revision">
+    <div class="toolbar"><div><h2 style="margin:0">Revision Tracker</h2><div class="sub">Use repeated review cycles instead of one-time study.</div></div></div>
+    <div class="grid three" id="revisionCards"></div>
+  </section>
+
+  <section class="section" id="mocks">
+    <div class="toolbar"><div><h2 style="margin:0">Mock Tests</h2><div class="sub">Record scores, negative marking, accuracy and lessons.</div></div><button class="primary" onclick="openModal('mock')">＋ Record Mock</button></div>
+    <div class="grid three">
+      <div class="card kpi"><div class="label">MOCKS</div><div class="value" id="mockCount">0</div></div>
+      <div class="card kpi"><div class="label">AVERAGE SCORE</div><div class="value" id="mockAvg">—</div></div>
+      <div class="card kpi"><div class="label">AVERAGE ACCURACY</div><div class="value" id="mockAccAvg">—</div></div>
+    </div>
+    <div class="card" style="margin-top:14px"><h3>📋 Mock-test history</h3><div class="list" id="mockList"></div></div>
+  </section>
+
+  <section class="section" id="mis">
+    <div class="toolbar"><div><h2 style="margin:0">MIS & Analytics</h2><div class="sub">Management-information view of your preparation.</div></div></div>
+    <div class="grid kpis">
+      <div class="card kpi"><div class="label">SYLLABUS</div><div class="value" id="misSyllabus">50%</div></div>
+      <div class="card kpi"><div class="label">REVISION</div><div class="value" id="misRevision">0%</div></div>
+      <div class="card kpi"><div class="label">MOCK ACCURACY</div><div class="value" id="misAccuracy">—</div></div>
+      <div class="card kpi"><div class="label">WEAK TOPICS</div><div class="value" id="misWeak">0</div></div>
+    </div>
+    <div class="grid two" style="margin-top:14px">
+      <div class="card"><h3>📌 Readiness snapshot</h3><div id="readiness"></div></div>
+      <div class="card"><h3>🧠 Recommendations</h3><div class="list" id="recommendations"></div></div>
+    </div>
+  </section>
+
+  <div class="footer">Exam Study Planner V3.4 • 2026 Exam Pattern + 50-Day Plan • Data stays in your browser • No account or server database required</div>
+</div>
+
+<div class="modal" id="modal"><div class="modalbox">
+  <div class="modalhead"><h3 id="modalTitle">Add</h3><button class="close" onclick="closeModal()">×</button></div>
+  <div id="modalBody"></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>const KEY='examStudyPlannerV3';
+const PROFILE_SEEDS=[
+ {id:'ssc-cgl',name:'SSC CGL',system:true},
+ {id:'appsc',name:'APPSC',system:true},
+ {id:'epfo',name:'EPFO',system:true},
+ {id:'bank-exams',name:'BANK EXAMS',system:true},
+ {id:'rbi',name:'RBI',system:true},
+ {id:'lic',name:'LIC',system:true}
+];
+const SUBJECT_SEEDS={
+ 'ssc-cgl':['General Intelligence & Reasoning','General Awareness','Quantitative Aptitude','English Comprehension'],
+ 'appsc':['General Studies & Mental Ability','Indian & Andhra Pradesh History','Indian & World Geography','Indian Polity & Governance','Indian Economy & Development','Science & Technology','Environment & Disaster Management','Current Affairs','Andhra Pradesh Society, Culture & Development'],
+ 'epfo':['General English','Indian Freedom Struggle','Current Events & Developmental Issues','Indian Polity & Economy','General Accounting Principles','Industrial Relations & Labour Laws','General Science & Computer Applications','Social Security in India'],
+ 'bank-exams':['English Language','Quantitative Aptitude / Numerical Ability','Reasoning Ability','General / Banking Awareness','Computer Aptitude','Data Analysis & Interpretation'],
+ 'rbi':['English Language','Quantitative Aptitude','Reasoning','General Awareness','Economic & Social Issues','Finance & Management'],
+ 'lic':['Reasoning Ability','Quantitative Aptitude','English Language','General Knowledge & Current Affairs','Data Analysis & Interpretation','Insurance & Financial Market Awareness','Descriptive English']
+};
+const TOPIC_SEEDS={
+ 'ssc-cgl':{
+  'General Awareness':[
+   'History — Ancient India','History — Medieval India','History — Modern India','History — Indian National Movement & Freedom Struggle',
+   'Culture — Art & Culture','Culture — Literature, Architecture, Music & Dance','Culture — Festivals, Traditions & Heritage',
+   'Geography — Physical Geography','Geography — Indian Geography','Geography — Rivers, Lakes, Dams & Water Resources','Geography — Climate, Soils & Natural Vegetation','Geography — Agriculture, Minerals & Industries',
+   'Economic Scene — Basic Economics & National Income','Economic Scene — Inflation, Unemployment & Poverty','Economic Scene — Banking, Money & Monetary Policy','Economic Scene — Budget, Taxation & Public Finance','Economic Scene — Government Schemes & Development',
+   'General Policy — Indian Constitution','General Policy — Fundamental Rights, Duties & Directive Principles','General Policy — President, Vice-President, Prime Minister & Council of Ministers','General Policy — Parliament & Legislative System','General Policy — Supreme Court & High Courts','General Policy — Centre-State Relations & Local Government','General Policy — Constitutional & Statutory Bodies',
+   'Scientific Research — Physics & Everyday Science','Scientific Research — Chemistry & Everyday Science','Scientific Research — Biology, Human Body & Diseases','Scientific Research — Space, Defence & Scientific Institutions','Scientific Research — Technology, Computers & Emerging Science',
+   'Current Events — National & International Events','Current Events — Government Schemes, Reports & Indices','Current Events — Awards, Honours, Books & Authors','Current Events — Sports, Appointments & Important Days'
+  ]
+ }
+};
+
+const EXAM_PATTERNS={
+ 'ssc-cgl':{
+  summary:'Tier-I screening followed by Tier-II; Computer Knowledge Test and DEST are qualifying components for relevant posts.',
+  stages:[
+   {stage:'Tier-I',type:'Objective CBT',q:'100',marks:'200',time:'60 min',neg:'0.50 / wrong',status:'Screening'},
+   {stage:'Tier-II Paper-I',type:'Objective CBT',q:'Varies by section',marks:'450',time:'Session-wise',neg:'0.50 / wrong in relevant sections',status:'Merit'},
+   {stage:'CKT',type:'Computer test',q:'—',marks:'Qualifying',time:'As notified',neg:'—',status:'Qualifying'},
+   {stage:'DEST',type:'Data Entry Speed Test',q:'—',marks:'Qualifying',time:'As notified',neg:'—',status:'Qualifying'}
+  ]
+ },
+ 'appsc':{
+  summary:'State-service preparation profile with Preliminary screening and descriptive Main examination; interview applies to posts where prescribed.',
+  stages:[
+   {stage:'Preliminary',type:'Objective screening',q:'As notified',marks:'As notified',time:'As notified',neg:'As notified',status:'Screening'},
+   {stage:'Mains',type:'Descriptive / written',q:'As notified',marks:'As notified',time:'As notified',neg:'Usually none',status:'Merit'},
+   {stage:'Interview',type:'Personality / viva',q:'—',marks:'As notified',time:'As scheduled',neg:'—',status:'Where prescribed'}
+  ]
+ },
+ 'epfo':{
+  summary:'EPFO preparation profile covering the recruitment test and subsequent selection stage prescribed for the post.',
+  stages:[
+   {stage:'Recruitment Test',type:'Objective test',q:'As notified',marks:'As notified',time:'As notified',neg:'As notified',status:'Shortlisting'},
+   {stage:'Interview / Selection',type:'Interview / final process',q:'—',marks:'As notified',time:'As scheduled',neg:'—',status:'Where prescribed'}
+  ]
+ },
+ 'bank-exams':{
+  summary:'Common Bank PO/Clerk-style planning profile: Preliminary screening followed by Main examination; interview applies to officer/PO recruitment where prescribed.',
+  stages:[
+   {stage:'Prelims',type:'Objective CBT',q:'As notified',marks:'As notified',time:'Section-wise',neg:'Usually 0.25 / wrong',status:'Screening'},
+   {stage:'Mains',type:'Objective / descriptive',q:'As notified',marks:'As notified',time:'Section-wise',neg:'As notified',status:'Merit'},
+   {stage:'Interview',type:'Interview',q:'—',marks:'As notified',time:'As scheduled',neg:'—',status:'PO/officer where prescribed'}
+  ]
+ },
+ 'rbi':{
+  summary:'RBI Grade B General PY 2026: Phase-I, Phase-II and Interview.',
+  stages:[
+   {stage:'Phase-I',type:'Objective online',q:'200',marks:'200',time:'120 min',neg:'As notified',status:'Shortlisting'},
+   {stage:'Phase-II',type:'Online papers',q:'As notified',marks:'300',time:'Paper-wise',neg:'As notified',status:'Shortlisting'},
+   {stage:'Interview',type:'Interview',q:'—',marks:'75',time:'As scheduled',neg:'—',status:'Final'}
+  ]
+ },
+ 'lic':{
+  summary:'LIC AAO-style planning profile with Preliminary screening, Main examination and interview/final selection where prescribed.',
+  stages:[
+   {stage:'Prelims',type:'Objective CBT',q:'As notified',marks:'As notified',time:'Section-wise',neg:'As notified',status:'Screening'},
+   {stage:'Mains',type:'Objective + descriptive',q:'As notified',marks:'As notified',time:'As notified',neg:'As notified',status:'Merit'},
+   {stage:'Interview',type:'Interview',q:'—',marks:'As notified',time:'As scheduled',neg:'—',status:'Final'}
+  ]
+ }
+};
+
+const DEFAULT_CUTOFFS={
+ 'ssc-cgl':[['Tier-I','UR','—','Target: 85%+','Set your own safe score'],['Tier-II','UR','—','Target: 75%+','Set your own safe score']],
+ 'appsc':[['Preliminary','General','—','Target','Update with latest APPSC cut-off'],['Mains','General','—','Target','Update with latest APPSC cut-off']],
+ 'epfo':[['Recruitment Test','General','—','Target','Update with latest UPSC/EPFO result'],['Final','General','—','Target','Update with latest result']],
+ 'bank-exams':[['Prelims','General','—','Target','Cut-offs vary by bank/year'],['Mains','General','—','Target','Cut-offs vary by bank/year']],
+ 'rbi':[['Phase-I','UR','108.75 / 200 (PY 2026)','125+','PY 2026 aggregate reference'],['Phase-II','UR','—','220+','Update when final PY 2026 cut-off is published'],['Final','UR','—','250+','Update with final result']],
+ 'lic':[['Prelims','General','—','Target','Update with latest LIC cut-off'],['Mains','General','—','Target','Update with latest LIC cut-off']]
+};
+
+const old=loadOld();
+let data=JSON.parse(localStorage.getItem(KEY)||'null')||{
+  exams:[{id:'ssc-cgl',name:'SSC CGL',date:'2026-08-10',hours:4,system:true}],
+  activeExamId:'ssc-cgl',
+  subjects:[],
+  topics:[{id:1,examId:'ssc-cgl',subject:'English',name:'Tenses',done:true,weak:false,rev:[true,false,false]},{id:2,examId:'ssc-cgl',subject:'English',name:'Articles',done:false,weak:false,rev:[false,false,false]}],
+  tasks:[],mocks:[],revision:{},studyByExam:{'ssc-cgl':[0,0,0,0,0,0,0]},dayPlans:{},cutoffs:{}
+};
+if(old){data=mergeOld(old,data);save()}
+migrateMultiExam();
+Object.keys(EXAM_PATTERNS).forEach(id=>{if(data.exams.some(e=>String(e.id)===String(id)))ensure50DayPlan(id)});
+save();
+function loadOld(){
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i),v=localStorage.getItem(k);
+    if(!v||k===KEY) continue;
+    try{const o=JSON.parse(v); if(o && (o.exams||o.topics||o.subjects||o.tasks||o.mocks)) return o}catch(e){}
+  } return null;
+}
+function mergeOld(o,f){
+  const r={...f};
+  if(Array.isArray(o.exams)&&o.exams.length) r.exams=o.exams;
+  if(Array.isArray(o.subjects)) r.subjects=o.subjects;
+  if(Array.isArray(o.topics)&&o.topics.length) r.topics=o.topics;
+  if(Array.isArray(o.tasks)) r.tasks=o.tasks;
+  if(Array.isArray(o.mocks)) r.mocks=o.mocks;
+  if(Array.isArray(o.study)) r.study=o.study;
+  if(o.studyByExam&&typeof o.studyByExam==='object') r.studyByExam=o.studyByExam;
+  if(o.activeExamId) r.activeExamId=o.activeExamId;
+  return r;
+}
+function migrateMultiExam(){
+  data.exams=Array.isArray(data.exams)?data.exams:[];
+  let first=data.exams[0];
+  if(first && String(first.name).trim().toLowerCase()==='ssc'){
+    first.name='SSC CGL'; first.id='ssc-cgl'; first.system=true;
+  }
+  if(!first){first={id:'ssc-cgl',name:'SSC CGL',date:'',hours:4,system:true};data.exams.unshift(first)}
+  PROFILE_SEEDS.forEach(seed=>{
+    let exists=data.exams.find(e=>String(e.name).trim().toLowerCase()===seed.name.toLowerCase() || e.id===seed.id);
+    if(!exists)data.exams.push({...seed,date:'',hours:4});
+    else exists.system=true;
+  });
+  const firstId=data.exams[0].id;
+  data.activeExamId=data.activeExamId && data.exams.some(e=>String(e.id)===String(data.activeExamId))?data.activeExamId:firstId;
+  data.topics=Array.isArray(data.topics)?data.topics:[];data.tasks=Array.isArray(data.tasks)?data.tasks:[];data.mocks=Array.isArray(data.mocks)?data.mocks:[];
+  data.topics.forEach(t=>{t.rev=t.rev||[false,false,false];if(!t.examId)t.examId=firstId});
+  data.tasks.forEach(t=>{if(!t.examId)t.examId=firstId});
+  data.mocks.forEach(m=>{if(!m.examId)m.examId=firstId});
+  data.subjects=Array.isArray(data.subjects)?data.subjects:[];
+  seedDefaultSubjects();
+  seedDefaultTopics();
+  data.studyByExam=(data.studyByExam&&typeof data.studyByExam==='object')?data.studyByExam:{};
+  data.dayPlans=(data.dayPlans&&typeof data.dayPlans==='object')?data.dayPlans:{};
+  data.cutoffs=(data.cutoffs&&typeof data.cutoffs==='object')?data.cutoffs:{};
+  data.exams.forEach(e=>ensure50DayPlan(e.id));
+  if(Array.isArray(data.study)&&!data.studyByExam[firstId])data.studyByExam[firstId]=data.study;
+  if(!Array.isArray(data.studyByExam[firstId]))data.studyByExam[firstId]=[0,0,0,0,0,0,0];
+  data.exams.forEach(e=>{if(!Array.isArray(data.studyByExam[e.id]))data.studyByExam[e.id]=[0,0,0,0,0,0,0]});
+  delete data.study; save();
+}
+function subjectSeedNames(examId){return SUBJECT_SEEDS[examId]||[]}
+function seedDefaultSubjects(){
+  data.exams.forEach(e=>{
+    subjectSeedNames(e.id).forEach((name,idx)=>{
+      if(!data.subjects.some(s=>String(s.examId)===String(e.id)&&s.name.toLowerCase()===name.toLowerCase())) data.subjects.push({id:'sub-'+e.id+'-'+idx,examId:e.id,name,system:true});
+    });
+    data.topics.filter(t=>String(t.examId)===String(e.id)&&t.subject).forEach(t=>{
+      if(!data.subjects.some(s=>String(s.examId)===String(e.id)&&s.name.toLowerCase()===String(t.subject).toLowerCase())) data.subjects.push({id:'sub-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),examId:e.id,name:String(t.subject),system:false});
+    });
+  });
+}
+function seedDefaultTopics(){
+  Object.entries(TOPIC_SEEDS).forEach(([examId,subjects])=>{
+    Object.entries(subjects).forEach(([subject,names])=>{
+      names.forEach((name,idx)=>{
+        const exists=data.topics.some(t=>String(t.examId)===examId && String(t.subject).toLowerCase()===subject.toLowerCase() && String(t.name).toLowerCase()===name.toLowerCase());
+        if(!exists) data.topics.push({id:'topic-'+examId+'-'+idx+'-'+Math.random().toString(36).slice(2,7),examId,subject,name,done:false,weak:false,rev:[false,false,false],system:true});
+      });
+    });
+  });
+}
+function currentSubjects(){const e=activeExam();return e?data.subjects.filter(s=>String(s.examId)===String(e.id)):[]}
+function subjectCount(name){return currentTopics().filter(t=>String(t.subject||'General')===String(name)).length}
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function pct(a,b){return b?Math.round(a/b*100):0}
+function activeExam(){return data.exams.find(e=>String(e.id)===String(data.activeExamId))||data.exams[0]}
+function currentTopics(){const e=activeExam();return e?data.topics.filter(t=>String(t.examId)===String(e.id)):[]}
+function currentTasks(){const e=activeExam();return e?data.tasks.filter(t=>String(t.examId)===String(e.id)):[]}
+function currentMocks(){const e=activeExam();return e?data.mocks.filter(m=>String(m.examId)===String(e.id)):[]}
+function currentStudy(){const e=activeExam();return e&&Array.isArray(data.studyByExam?.[e.id])?data.studyByExam[e.id]:[0,0,0,0,0,0,0]}
+
+function defaultSessionsForExam(examId,day){
+  const subs=SUBJECT_SEEDS[examId]||['General Studies'];
+  const topics=data.topics.filter(t=>String(t.examId)===String(examId));
+  const slots=[
+    {hours:1.5,index:(day-1)%subs.length},
+    {hours:1.5,index:(day)%subs.length},
+    {hours:1,index:(day+1)%subs.length}
+  ];
+  return slots.map((x,i)=>{
+    const subject=subs[x.index];
+    const candidates=topics.filter(t=>String(t.subject||'').toLowerCase()===String(subject).toLowerCase());
+    const topic=candidates.length?candidates[(day+i-1)%candidates.length].name:'Core concepts / practice';
+    return {id:'s-'+Date.now()+'-'+day+'-'+i+'-'+Math.random().toString(36).slice(2,6),subject,topic,hours:x.hours,time:i===0?'Morning':i===1?'Evening':'Night'};
+  });
+}
+function ensure50DayPlan(examId){
+  if(!data.dayPlans) data.dayPlans={};
+  if(Array.isArray(data.dayPlans[examId]) && data.dayPlans[examId].length===50) return;
+  data.dayPlans[examId]=Array.from({length:50},(_,i)=>({day:i+1,sessions:defaultSessionsForExam(examId,i+1)}));
+}
+function currentPlan(){const e=activeExam();if(!e)return[];ensure50DayPlan(e.id);return data.dayPlans[e.id]}
+function renderPattern(){
+  const e=activeExam(), p=e?EXAM_PATTERNS[e.id]:null;
+  const title=document.getElementById('patternExamTitle');
+  if(!p){if(title)title.textContent=e?.name||'Exam';return;}
+  title.textContent=e.name;
+  document.getElementById('patternSummary').textContent=p.summary;
+  document.getElementById('patternStages').innerHTML=p.stages.map(x=>`<div class="patternStage"><div class="stageTitle">${esc(x.stage)}</div><div class="stageMeta">${esc(x.type)}<br>Marks: <b>${esc(x.marks)}</b><br>Time: ${esc(x.time)}<br>Negative: ${esc(x.neg)}</div><span class="patternTag">${esc(x.status)}</span></div>`).join('');
+  document.getElementById('patternRows').innerHTML=p.stages.map(x=>`<tr><td><b>${esc(x.stage)}</b></td><td>${esc(x.type)}</td><td>${esc(x.q)}</td><td>${esc(x.marks)}</td><td>${esc(x.time)}</td><td>${esc(x.neg)}</td><td>${esc(x.status)}</td></tr>`).join('');
+  const rows=(data.cutoffs?.[e.id]||DEFAULT_CUTOFFS[e.id]||[]);
+  document.getElementById('cutoffRows').innerHTML=rows.map((r,i)=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td><b>${esc(r[3])}</b></td><td>${esc(r[4])}</td></tr>`).join('');
+}
+function render50DayPlan(){
+  const list=document.getElementById('plan50List');if(!list)return;
+  const plan=currentPlan();
+  list.innerHTML=plan.map(d=>`<div class="planDay">
+    <div class="planDayHead">
+      <div><div class="planDayTitle">DAY ${d.day}</div><div class="planDayMeta">${d.sessions.reduce((a,x)=>a+Number(x.hours||0),0)} hours planned • ${d.sessions.length} study blocks</div></div>
+      <button class="primary" onclick="openModal('planSession','${d.day}')">＋ Add Block</button>
+    </div>
+    ${d.sessions.length?d.sessions.map(x=>`<div class="planSession">
+      <div class="sessionTime">${esc(x.time||'Study')}</div>
+      <div class="sessionMain"><strong>${esc(x.subject||'General')} — ${esc(x.topic||'Study')}</strong><small>${Number(x.hours||0)} hour${Number(x.hours||0)==1?'':'s'}</small></div>
+      <div class="planActions"><button class="miniBtn" onclick="openModal('editPlanSession','${esc(x.id)}')">Edit</button><button class="miniDanger" onclick="deletePlanSession('${esc(x.id)}')">Delete</button></div>
+    </div>`).join(''):`<div class="sub" style="padding:12px 0">No study blocks. Add one for this day.</div>`}
+  </div>`).join('');
+}
+function reset50DayPlan(){
+  const e=activeExam();if(!e)return;
+  if(!confirm('Reset the 50-day plan for '+e.name+' to the default timetable? Your existing customized blocks will be replaced.'))return;
+  delete data.dayPlans[e.id];ensure50DayPlan(e.id);save();render();toast('50-day plan reset to default');
+}
+function addPlanSession(day){
+  const e=activeExam();if(!e)return;
+  ensure50DayPlan(e.id);
+  const subject=document.getElementById('planSubject').value;
+  const topic=document.getElementById('planTopic').value.trim()||'Study / Practice';
+  const hours=Number(document.getElementById('planHours').value)||1;
+  const time=document.getElementById('planTime').value||'Evening';
+  data.dayPlans[e.id][Number(day)-1].sessions.push({id:'s-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),subject,topic,hours,time});
+  save();closeModal();render();toast('Study block added');
+}
+function savePlanSession(id){
+  const e=activeExam();if(!e)return;
+  for(const d of currentPlan())for(const x of d.sessions)if(String(x.id)===String(id)){
+    x.subject=document.getElementById('planSubject').value;
+    x.topic=document.getElementById('planTopic').value.trim()||'Study / Practice';
+    x.hours=Number(document.getElementById('planHours').value)||1;
+    x.time=document.getElementById('planTime').value||'Evening';
+  }
+  save();closeModal();render();toast('Study block updated');
+}
+function deletePlanSession(id){
+  const e=activeExam();if(!e)return;
+  if(!confirm('Delete this study block?'))return;
+  data.dayPlans[e.id].forEach(d=>d.sessions=d.sessions.filter(x=>String(x.id)!==String(id)));
+  save();render();toast('Study block deleted');
+}
+function openPlanSessionModal(day){
+  const e=activeExam();if(!e)return;
+  const subs=currentSubjects().map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('')||'<option value="General">General</option>';
+  const d=Number(day)||1;
+  document.getElementById('modalTitle').textContent=`Add Study Block — Day ${d}`;
+  document.getElementById('modalBody').innerHTML=`<div class="formgrid">
+    <div class="field"><label>Day</label><input value="${d}" readonly></div>
+    <div class="field"><label>Study period</label><select id="planTime"><option>Morning</option><option selected>Evening</option><option>Night</option><option>Any time</option></select></div>
+    <div class="field"><label>Subject</label><select id="planSubject">${subs}</select></div>
+    <div class="field"><label>Hours</label><input id="planHours" type="number" min=".25" step=".25" value="1"></div>
+    <div class="field" style="grid-column:1/-1"><label>Topic / task</label><input id="planTopic" placeholder="e.g. Percentage — concepts + practice"></div>
+  </div><button class="primary" style="margin-top:14px" onclick="addPlanSession(${d})">Add study block</button>`;
+  document.getElementById('modal').classList.add('show');
+}
+function openEditPlanSession(id){
+  const e=activeExam();if(!e)return;
+  let found=null;
+  for(const d of currentPlan())found=found||d.sessions.find(x=>String(x.id)===String(id));
+  if(!found)return;
+  const subs=currentSubjects().map(s=>`<option value="${esc(s.name)}" ${String(s.name)===String(found.subject)?'selected':''}>${esc(s.name)}</option>`).join('')||'<option value="General">General</option>';
+  document.getElementById('modalTitle').textContent='Edit Study Block';
+  document.getElementById('modalBody').innerHTML=`<div class="formgrid">
+    <div class="field"><label>Study period</label><select id="planTime"><option ${found.time==='Morning'?'selected':''}>Morning</option><option ${found.time==='Evening'?'selected':''}>Evening</option><option ${found.time==='Night'?'selected':''}>Night</option><option ${found.time==='Any time'?'selected':''}>Any time</option></select></div>
+    <div class="field"><label>Hours</label><input id="planHours" type="number" min=".25" step=".25" value="${Number(found.hours||1)}"></div>
+    <div class="field"><label>Subject</label><select id="planSubject">${subs}</select></div>
+    <div class="field" style="grid-column:1/-1"><label>Topic / task</label><input id="planTopic" value="${esc(found.topic||'')}"></div>
+  </div><button class="primary" style="margin-top:14px" onclick="savePlanSession('${esc(String(id))}')">Save changes</button>`;
+  document.getElementById('modal').classList.add('show');
+}
+function openCutoffModal(){
+  const e=activeExam();if(!e)return;
+  const rows=(data.cutoffs?.[e.id]||DEFAULT_CUTOFFS[e.id]||[]).map(r=>r.join(' | ')).join('\n');
+  document.getElementById('modalTitle').textContent='Edit Cut-off / Target Tracker';
+  document.getElementById('modalBody').innerHTML=`<div class="field"><label>One row per line: Stage | Category | Reference | My Target | Notes</label><textarea id="cutoffText" style="width:100%;min-height:180px;padding:11px;border:1px solid var(--line);border-radius:12px">${esc(rows)}</textarea></div><div class="sub" style="margin-top:8px">Use — where an official/reference value is not yet entered.</div><button class="primary" style="margin-top:14px" onclick="saveCutoffs()">Save cut-off tracker</button>`;
+  document.getElementById('modal').classList.add('show');
+}
+function saveCutoffs(){
+  const e=activeExam();if(!e)return;
+  const rows=document.getElementById('cutoffText').value.split('\n').map(x=>x.trim()).filter(Boolean).map(x=>x.split('|').map(v=>v.trim()));
+  data.cutoffs[e.id]=rows;save();closeModal();render();toast('Cut-off tracker updated');
+}
+
+function setActiveExam(id){if(data.exams.some(e=>String(e.id)===String(id))){data.activeExamId=id;save();render();toast('Switched to '+activeExam().name)}}
+function daysLeft(){const e=activeExam();if(!e?.date)return 0;return Math.max(0,Math.ceil((new Date(e.date)-new Date().setHours(0,0,0,0))/86400000))}
+function renderExamSwitcher(){const sel=document.getElementById('examSwitcher');if(!sel)return;sel.innerHTML=data.exams.map(e=>`<option value="${esc(e.id)}" ${String(e.id)===String(data.activeExamId)?'selected':''}>${esc(e.name)}</option>`).join('')}
+function go(tab){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===tab));render()}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.tab));
+function render(){
+ const topics=currentTopics(),tasks=currentTasks(),mocks=currentMocks(); const total=topics.length,done=topics.filter(x=>x.done).length, p=pct(done,total);
+ document.getElementById('heroPct').textContent=p+'%';document.getElementById('mainPct').textContent=p+'%';
+ document.getElementById('heroRing').style.setProperty('--p',p+'%');document.getElementById('mainRing').style.setProperty('--p',p+'%');
+ document.getElementById('mainProgress').style.width=p+'%';document.getElementById('completedText').textContent=`${done} of ${total}`;
+ document.getElementById('kTopics').textContent=total;document.getElementById('kTopicDelta').textContent=`${done} completed`;
+ const hours=currentStudy().reduce((a,b)=>a+Number(b||0),0);document.getElementById('kHours').textContent=hours+'h';
+ const todayTasks=tasks.filter(t=>!t.date||t.date===new Date().toISOString().slice(0,10)), td=todayTasks.filter(t=>t.done).length;
+ document.getElementById('kTasks').textContent=pct(td,todayTasks.length)+'%';
+ const avg=mocks.length?Math.round(mocks.reduce((a,m)=>a+Number(m.score||0),0)/mocks.length):null;document.getElementById('kMock').textContent=avg==null?'—':avg+'%';
+ document.getElementById('heroText').textContent=activeExam()?`${activeExam().name} • ${daysLeft()} days remaining • ${activeExam().hours||0} study hours/day`:'Add an exam to start your preparation plan.';
+ renderExamSwitcher();renderChart();renderSubjects();renderActions();renderExams();renderTopics();renderPattern();render50DayPlan();renderTasks();renderRevision();renderMocks();renderMIS();
+}
+function renderChart(){
+ const labels=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],a=currentStudy().length?currentStudy():[0,0,0,0,0,0,0],mx=Math.max(1,...a);
+ document.getElementById('studyChart').innerHTML=a.map((v,i)=>`<div class="col"><b>${v}h</b><i style="height:${Math.max(4,v/mx*135)}px"></i><span>${labels[i]}</span></div>`).join('');
+}
+function renderSubjects(){
+ const map={};currentTopics().forEach(t=>{map[t.subject||'General']??={d:0,t:0};map[t.subject||'General'].t++;if(t.done)map[t.subject||'General'].d++});
+ document.getElementById('subjectBars').innerHTML=Object.entries(map).map(([s,x])=>`<div class="barrow"><div class="barhead"><span>${esc(s)}</span><span>${pct(x.d,x.t)}%</span></div><div class="bar"><i style="width:${pct(x.d,x.t)}%"></i></div></div>`).join('')||'<div class="sub">No subjects yet.</div>';
+ const title=document.getElementById('subjectExamTitle');if(title)title.textContent=activeExam()?.name||'Exam';
+ const list=document.getElementById('subjectList');
+ if(list)list.innerHTML=currentSubjects().map(s=>{const n=subjectCount(s.name);const done=currentTopics().filter(t=>String(t.subject||'General')===String(s.name)&&t.done).length;return `<div class="subjectCard"><div class="dot"></div><div class="subjectInfo"><div class="subjectName">${esc(s.name)}</div><div class="subjectMeta">${n} topic${n===1?'':'s'} • ${pct(done,n)}% completed</div></div><div class="subjectActions"><button class="miniBtn" onclick="openModal('editSubject','${esc(s.id)}')">Edit</button><button class="miniDanger" onclick="deleteSubject('${esc(s.id)}')">Delete</button></div></div>`}).join('')||'<div class="sub">No subjects yet. Add one using the button above.</div>';
+}
+function renderActions(){
+ const topics=currentTopics(),tasks=currentTasks(),mocks=currentMocks(); const rem=topics.filter(t=>!t.done).length;
+ document.getElementById('nextActions').innerHTML=[
+  ['Continue topic preparation',rem+' topics remaining','pink'],
+  ['Plan today’s study',tasks.filter(t=>!t.done).length+' tasks pending',''],
+  ['Record a mock test',mocks.length+' recorded so far','green']
+ ].map(x=>`<div class="item"><div class="dot"></div><div class="itemMain"><strong>${x[0]}</strong><small>${x[1]}</small></div><span class="pill ${x[2]}">Open</span></div>`).join('');
+}
+function renderExams(){
+ document.getElementById('examList').innerHTML=data.exams.map(e=>`<div class="card ${String(e.id)===String(data.activeExamId)?'examCardActive':''}">
+   <div class="section-head"><div><h3>🎓 ${esc(e.name)}</h3>${String(e.id)===String(data.activeExamId)?'<span class="examBadge">ACTIVE PROFILE</span>':''}</div><div style="display:flex;gap:7px"><button class="secondary" onclick="setActiveExam('${esc(e.id)}')">Use</button><button class="secondary" onclick="openModal('editExam','${esc(e.id)}')">Edit</button></div></div>
+   <div class="statline"><span>Target</span><b>${esc(e.date||'Not set')}</b></div>
+   <div class="statline"><span>Days left</span><b>${e.date?Math.max(0,Math.ceil((new Date(e.date)-new Date().setHours(0,0,0,0))/86400000)):'—'}</b></div>
+   <div class="statline"><span>Daily hours</span><b>${e.hours||0}h</b></div>
+   <div class="statline"><span>Topics</span><b>${data.topics.filter(t=>String(t.examId)===String(e.id)).length}</b></div>
+   <button class="danger" style="margin-top:10px" onclick="delExam('${esc(e.id)}')">Delete profile</button>
+ </div>`).join('')||'<div class="card">No exam profiles.</div>';
+}
+function renderTopics(){
+ const by={};currentTopics().forEach(t=>{t.rev=t.rev||[false,false,false];(by[t.subject||'General']??=[]).push(t)});
+ document.getElementById('topicList').innerHTML=Object.entries(by).map(([sub,arr])=>`<div style="margin-bottom:18px">
+   <div class="section-head" style="margin-bottom:8px"><strong>📘 ${esc(sub)}</strong><button class="secondary subjectAdd" onclick="openTopicForSubject('${encodeURIComponent(sub)}')">＋ Add Topic</button></div>
+   ${arr.map(t=>`<div class="item" style="margin-top:8px">
+     <input type="checkbox" ${t.done?'checked':''} onchange="toggleTopic('${esc(String(t.id))}',this.checked)">
+     <div class="itemMain"><strong>${esc(t.name)}</strong><small>${t.done?'Completed':'Pending'}${t.weak?' • Weak topic':''}</small></div>
+     <button class="pill ${t.weak?'pink':'orange'}" onclick="toggleWeak('${esc(String(t.id))}')">${t.weak?'Weak':'Mark weak'}</button>
+   </div>`).join('')}
+ </div>`).join('')||'<div class="sub">Add your first topic.</div>';
+ const weak=currentTopics().filter(t=>t.weak);
+ document.getElementById('weakList').innerHTML=weak.map(t=>`<div class="item"><div class="dot" style="background:var(--pink)"></div><div class="itemMain"><strong>${esc(t.name)}</strong><small>${esc(t.subject||'General')}</small></div></div>`).join('')||'<div class="sub">No weak topics marked.</div>';
+}
+
+function renderTasks(){
+ document.getElementById('taskList').innerHTML=currentTasks().map(t=>`<div class="item"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id})"><div class="itemMain"><strong>${esc(t.title)}</strong><small>${esc(t.date||'Today')} • ${t.hours||0}h</small></div><span class="pill ${t.done?'green':''}">${t.done?'Done':'Pending'}</span></div>`).join('')||'<div class="sub">No study tasks. Add one to build your day.</div>';
+}
+function renderRevision(){
+ const arr=currentTopics();
+ document.getElementById('revisionCards').innerHTML=arr.length?arr.map(t=>{
+   t.rev=t.rev||[false,false,false];
+   return `<div class="card">
+     <div class="section-head"><div><h3 style="margin:0">🔁 ${esc(t.subject||'General')} — ${esc(t.name)}</h3><div class="sub">${t.done?'Topic completed — revision unlocked':'Topic not yet covered'}</div></div><span class="pill ${t.done?'green':'orange'}">${t.done?'Completed':'Pending'}</span></div>
+     ${t.done
+       ? `<div class="revision-grid">${[0,1,2].map((n)=>`<label class="revbox"><input type="checkbox" ${t.rev[n]?'checked':''} onchange="toggleRevision('${esc(String(t.id))}',${n},this.checked)"> Revision ${n+1}</label>`).join('')}</div>`
+       : `<div class="pending">⏳ Revision pending: complete <b>${esc(t.name)}</b> in the Subjects section first. Revision 1–3 will unlock automatically.</div>`}
+   </div>`;
+ }).join(''):'<div class="card"><div class="sub">Add subjects and topics to begin revision.</div></div>';
+}
+
+function renderMocks(){
+ const ms=currentMocks();
+ const avg=ms.length?Math.round(ms.reduce((a,m)=>a+Number(m.score||0),0)/ms.length):null;
+ const accs=ms.filter(m=>m.accuracy!==null&&m.accuracy!==undefined);
+ const accAvg=accs.length?Math.round(accs.reduce((a,m)=>a+Number(m.accuracy||0),0)/accs.length):null;
+ document.getElementById('mockCount').textContent=ms.length;
+ document.getElementById('mockAvg').textContent=avg===null?'—':avg+'%';
+ document.getElementById('mockAccAvg').textContent=accAvg===null?'—':accAvg+'%';
+ document.getElementById('mockList').innerHTML=ms.slice().reverse().map(m=>`<div class="item">
+   <div class="dot" style="background:var(--green)"></div>
+   <div class="itemMain"><strong>${esc(m.name||'Mock Test')}</strong>
+   <small>${esc(m.date||'')} • ${esc(m.subject||'General')} • ${m.correct||0} correct • ${m.wrong||0} wrong • ${m.unattempted??0} unattempted</small>
+   <div class="mockStats">
+     <div class="mockStat"><small>Score</small><b>${Number(m.score||0).toFixed(2)}%</b></div>
+     <div class="mockStat"><small>Accuracy</small><b>${m.accuracy==null?'—':Number(m.accuracy).toFixed(2)+'%'}</b></div>
+     <div class="mockStat"><small>Marks after negative</small><b>${m.marks==null?'—':Number(m.marks).toFixed(2)}${m.negative?` (−${m.negative}/wrong)`:''}</b></div>
+   </div>
+   ${m.notes?`<div class="sub" style="margin-top:8px">📝 ${esc(m.notes)}</div>`:''}
+   </div><button class="danger" onclick="deleteMock(${m.id})">Delete</button>
+ </div>`).join('')||'<div class="sub">No mock tests recorded yet.</div>';
+}
+
+function renderMIS(){
+ const topics=currentTopics(),tasks=currentTasks(),mocks=currentMocks();
+ const p=pct(topics.filter(t=>t.done).length,topics.length), weak=topics.filter(t=>t.weak).length;
+ const revChecks=topics.reduce((sum,t)=>sum+(t.rev||[false,false,false]).filter(Boolean).length,0), revTotal=topics.filter(t=>t.done).length*3;
+ const revPct=pct(revChecks,revTotal);
+ const avg=mocks.length?Math.round(mocks.reduce((a,m)=>a+Number(m.score||0),0)/mocks.length):0;
+ document.getElementById('misSyllabus').textContent=p+'%';document.getElementById('misRevision').textContent=revPct+'%';document.getElementById('misAccuracy').textContent=mocks.length?avg+'%':'—';document.getElementById('misWeak').textContent=weak;
+ document.getElementById('readiness').innerHTML=[['Syllabus completion',p],['Revision readiness',revPct],['Mock performance',avg],['Daily-plan completion',Number(document.getElementById('kTasks').textContent.replace('%',''))||0]].map(x=>`<div class="barrow"><div class="barhead"><span>${x[0]}</span><b>${x[1]}%</b></div><div class="bar"><i style="width:${x[1]}%"></i></div></div>`).join('');
+ const rec=[];if(weak)rec.push(`Revise ${weak} weak topic${weak>1?'s':''} first.`);if(p<70)rec.push('Finish pending syllabus topics before increasing mock frequency.');if(!tasks.length)rec.push('Create a daily study plan for today.');if(mocks.length===0)rec.push('Record your first mock test to unlock performance analytics.');if(!rec.length)rec.push('Good progress — maintain your current study rhythm.');
+ document.getElementById('recommendations').innerHTML=rec.map(x=>`<div class="item"><div class="dot"></div><div class="itemMain"><strong>${x}</strong></div></div>`).join('');
+}
+function openModal(type, presetSubject=''){
+ const m=document.getElementById('modal'),b=document.getElementById('modalBody'),title=document.getElementById('modalTitle');
+ let form='';
+ if(type==='exam'){
+   title.textContent='Add Exam Profile';
+   form=`<div class="formgrid"><div class="field"><label>Exam profile</label><select id="f1"><option value="SSC CGL">SSC CGL</option><option value="APPSC">APPSC</option><option value="EPFO">EPFO</option><option value="BANK EXAMS">BANK EXAMS</option><option value="RBI">RBI</option><option value="LIC">LIC</option><option value="CUSTOM">Custom exam</option></select></div><div class="field" id="customExamField" style="display:none"><label>Custom exam name</label><input id="customExam" placeholder="e.g. NIACL AO"></div><div class="field"><label>Target date</label><input id="f2" type="date"></div><div class="field"><label>Study hours/day</label><input id="f3" type="number" min="0" step=".5" value="4"></div></div><div class="sub" style="margin-top:10px">Your selected exam will become the active profile after saving.</div><button class="primary" style="margin-top:14px" onclick="addExam()">Save exam profile</button>`;
+ }
+ if(type==='editExam'){
+   const e=data.exams.find(x=>String(x.id)===String(presetSubject)); if(!e){closeModal();return}
+   title.textContent=`Edit ${e.name}`;
+   form=`<div class="formgrid"><div class="field"><label>Exam name</label><input id="editExamName" value="${esc(e.name)}" ${e.system?'readonly':''}></div><div class="field"><label>Target date</label><input id="editExamDate" type="date" value="${esc(e.date||'')}"></div><div class="field"><label>Study hours/day</label><input id="editExamHours" type="number" min="0" step=".5" value="${e.hours||0}"></div></div><button class="primary" style="margin-top:14px" onclick="saveExamEdit('${esc(e.id)}')">Save changes</button>`;
+ }
+ if(type==='subject'){
+  title.textContent='Add Subject';
+  form=`<div class="formgrid"><div class="field"><label>Subject name</label><input id="subjectName" placeholder="e.g. General Awareness"></div></div><div class="sub" style="margin-top:10px">Add a subject to ${esc(activeExam()?.name||'this exam')}.</div><button class="primary" style="margin-top:14px" onclick="addSubject()">Add subject</button>`;
+ }
+ if(type==='editSubject'){
+  const ss=data.subjects.find(x=>String(x.id)===String(presetSubject));if(!ss){closeModal();return}
+  title.textContent='Edit Subject';
+  form=`<div class="formgrid"><div class="field"><label>Subject name</label><input id="editSubjectName" value="${esc(ss.name)}"></div></div><div class="sub" style="margin-top:10px">Renaming also updates its existing topics.</div><button class="primary" style="margin-top:14px" onclick="saveSubjectEdit('${esc(ss.id)}')">Save changes</button>`;
+ }
+ if(type==='topic'){
+   title.textContent=presetSubject?`Add Topic to ${presetSubject}`:'Add Topic';
+   const subjectPart=presetSubject
+     ? `<input id="f1" type="hidden" value="${esc(presetSubject)}"><div class="field"><label>Subject</label><input value="${esc(presetSubject)}" readonly></div>`
+     : `<div class="field"><label>Subject</label><select id="f1">${currentSubjects().map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('')||'<option value="General">General</option>'}</select></div>`;
+   form=`<div class="formgrid">${subjectPart}<div class="field"><label>Topic</label><input id="f2" placeholder="Tenses"></div></div><button class="primary" style="margin-top:14px" onclick="addTopic()">Add topic</button>`;
+ }
+ if(type==='task'){
+   title.textContent='Add Study Task';
+   form=`<div class="formgrid"><div class="field"><label>Task</label><input id="f1" placeholder="Study Tenses"></div><div class="field"><label>Date</label><input id="f2" type="date" value="${new Date().toISOString().slice(0,10)}"></div><div class="field"><label>Hours</label><input id="f3" type="number" min="0" step=".5" value="1"></div></div><button class="primary" style="margin-top:14px" onclick="addTask()">Add task</button>`;
+ }
+ if(type==='mock'){
+   title.textContent='Record Mock Test';
+   form=`<div class="formgrid">
+     <div class="field"><label>Mock name</label><input id="mockName" placeholder="e.g. SSC CGL Mock 1"></div>
+     <div class="field"><label>Date</label><input id="mockDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+     <div class="field"><label>Subject / Section</label><input id="mockSubject" placeholder="e.g. English"></div>
+     <div class="field"><label>Total questions</label><input id="mockTotal" type="number" min="1" value="100"></div>
+     <div class="field"><label>Correct</label><input id="mockCorrect" type="number" min="0" value="0"></div>
+     <div class="field"><label>Wrong</label><input id="mockWrong" type="number" min="0" value="0"></div>
+     <div class="field"><label>Negative marking / wrong</label><select id="mockNegative"><option value="0">None (0)</option><option value="0.25">0.25 mark</option><option value="0.5">0.50 mark</option><option value="1">1.00 mark</option></select></div>
+     <div class="field"><label>Unattempted</label><input id="mockUnattempted" type="number" readonly></div>
+     <div class="field"><label>Time taken (minutes)</label><input id="mockTime" type="number" min="0" value="0"></div>
+   </div>
+   <div class="mock-validation" id="mockCalcBox" style="margin-top:14px">Enter correct and wrong answers to calculate score.</div>
+   <div class="mockStats">
+     <div class="mockStat"><small>Score</small><b id="mockScore">—</b></div>
+     <div class="mockStat"><small>Accuracy</small><b id="mockAccuracy">—</b></div>
+     <div class="mockStat"><small>Marks after negative marking</small><b id="mockMarks">—</b></div>
+   </div>
+   <div class="field" style="margin-top:14px"><label>Mistakes / lessons</label><textarea id="mockNotes" style="width:100%;min-height:80px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;resize:vertical" placeholder="What went wrong? What should you revise?"></textarea></div>
+   <button class="primary" style="margin-top:14px" onclick="addMock()">Save mock</button>`;
+ }
+ b.innerHTML=form;m.classList.add('show');
+ if(type==='exam'){const sel=document.getElementById('f1');const cf=document.getElementById('customExamField');if(sel)sel.onchange=()=>{cf.style.display=sel.value==='CUSTOM'?'grid':'none'};}
+ if(type==='mock') attachMockCalculation();
+}
+
+function attachMockCalculation(){
+ ['mockTotal','mockCorrect','mockWrong','mockNegative'].forEach(id=>document.getElementById(id).addEventListener('input',updateMockCalculation));
+ updateMockCalculation();
+}
+
+function updateMockCalculation(){
+ const total=Number(document.getElementById('mockTotal')?.value)||0;
+ const correct=Number(document.getElementById('mockCorrect')?.value)||0;
+ const wrong=Number(document.getElementById('mockWrong')?.value)||0;
+ const neg=Number(document.getElementById('mockNegative')?.value)||0;
+ const attempted=correct+wrong;
+ const unattempted=total-attempted;
+ const box=document.getElementById('mockCalcBox');
+ if(!box)return;
+ if(!total){box.className='mock-validation';box.textContent='Enter total questions.';return}
+ if(correct<0||wrong<0||attempted>total){
+   box.className='mock-validation invalid';
+   box.textContent=`⚠️ Invalid: ${correct} correct + ${wrong} wrong = ${attempted} attempted, but total is ${total}.`;
+   document.getElementById('mockUnattempted').value='';
+   document.getElementById('mockScore').textContent='—';document.getElementById('mockAccuracy').textContent='—';document.getElementById('mockMarks').textContent='—';
+   return;
+ }
+ const marks=correct-(wrong*neg);
+ const score=Math.max(0,marks/total*100);
+ const accuracy=attempted?correct/attempted*100:0;
+ document.getElementById('mockUnattempted').value=unattempted;
+ document.getElementById('mockScore').textContent=score.toFixed(2)+'%';
+ document.getElementById('mockAccuracy').textContent=accuracy.toFixed(2)+'%';
+ document.getElementById('mockMarks').textContent=marks.toFixed(2);
+ box.className='mock-validation valid';
+ box.innerHTML=`✅ Valid: <b>${attempted}</b> attempted · <b>${unattempted}</b> unattempted · <b>${correct}</b> correct · <b>${wrong}</b> wrong`;
+}
+
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function saveExamEdit(id){
+ const e=data.exams.find(x=>String(x.id)===String(id));if(!e)return;
+ if(!e.system)e.name=document.getElementById('editExamName').value.trim()||e.name;
+ e.date=document.getElementById('editExamDate').value;
+ e.hours=Number(document.getElementById('editExamHours').value)||0;
+ save();closeModal();render();toast('Exam profile updated');
+}
+function addExam(){
+ const selected=document.getElementById('f1').value;
+ const name=selected==='CUSTOM'?(document.getElementById('customExam').value.trim()||'New Exam'):selected;
+ const existing=data.exams.find(e=>e.name.toLowerCase()===name.toLowerCase());
+ if(existing){data.activeExamId=existing.id;save();closeModal();render();toast(name+' is already in your profiles');return}
+ const id='exam-'+Date.now();
+ const date=document.getElementById('f2').value;
+ const hours=Number(document.getElementById('f3').value)||0;
+ data.exams.push({id,name,date,hours,system:false});
+ data.activeExamId=id;
+ data.studyByExam[id]=[0,0,0,0,0,0,0];ensure50DayPlan(id);
+ save();closeModal();render();toast('Exam profile added');
+}
+function addSubject(){
+ const name=document.getElementById('subjectName').value.trim();if(!name){toast('Enter a subject name');return}
+ if(currentSubjects().some(s=>s.name.toLowerCase()===name.toLowerCase())){toast('Subject already exists');return}
+ data.subjects.push({id:'sub-'+Date.now(),examId:activeExam().id,name,system:false});save();closeModal();render();toast('Subject added');
+}
+function saveSubjectEdit(id){
+ const ss=data.subjects.find(x=>String(x.id)===String(id));if(!ss)return;const name=document.getElementById('editSubjectName').value.trim();if(!name){toast('Enter a subject name');return}
+ if(data.subjects.some(x=>String(x.id)!==String(id)&&String(x.examId)===String(ss.examId)&&x.name.toLowerCase()===name.toLowerCase())){toast('Subject already exists');return}
+ const oldName=ss.name;ss.name=name;data.topics.filter(t=>String(t.examId)===String(ss.examId)&&String(t.subject)===String(oldName)).forEach(t=>t.subject=name);save();closeModal();render();toast('Subject updated');
+}
+function deleteSubject(id){
+ const ss=data.subjects.find(x=>String(x.id)===String(id));if(!ss)return;const n=subjectCount(ss.name);const msg=n?`Delete ${ss.name}? This will also delete its ${n} topic${n===1?'':'s'}.`:`Delete ${ss.name}?`;
+ if(!confirm(msg))return;data.subjects=data.subjects.filter(x=>String(x.id)!==String(id));data.topics=data.topics.filter(t=>!(String(t.examId)===String(ss.examId)&&String(t.subject)===String(ss.name)));save();render();toast('Subject deleted');
+}
+function addTopic(){
+ const subject=document.getElementById('f1').value.trim()||'General';
+ const name=document.getElementById('f2').value.trim()||'New Topic';
+ data.topics.push({id:Date.now(),examId:activeExam().id,subject,name,done:false,weak:false,rev:[false,false,false]});
+ save();closeModal();render();toast('Topic added');
+}
+function openTopicForSubject(encoded){openModal('topic',decodeURIComponent(encoded))}
+function addTask(){
+ const title=document.getElementById('f1').value.trim()||'Study session';
+ const date=document.getElementById('f2').value;
+ const hours=Number(document.getElementById('f3').value)||0;
+ data.tasks.push({id:Date.now(),examId:activeExam().id,title,date,hours,done:false});
+ save();closeModal();render();toast('Study task added');
+}
+function addMock(){
+ const name=document.getElementById('mockName').value.trim()||'Mock Test';
+ const date=document.getElementById('mockDate').value;
+ const subject=document.getElementById('mockSubject').value.trim()||'General';
+ const total=Number(document.getElementById('mockTotal').value)||0;
+ const correct=Number(document.getElementById('mockCorrect').value)||0;
+ const wrong=Number(document.getElementById('mockWrong').value)||0;
+ const neg=Number(document.getElementById('mockNegative').value)||0;
+ if(!total||correct<0||wrong<0||correct+wrong>total){updateMockCalculation();return}
+ const attempted=correct+wrong, unattempted=total-attempted;
+ const marks=correct-(wrong*neg), score=Math.max(0,marks/total*100);
+ const accuracy=attempted?correct/attempted*100:0;
+ data.mocks.push({id:Date.now(),examId:activeExam().id,name,date,subject,total,correct,wrong,unattempted,negative:neg,marks,score,accuracy,time:Number(document.getElementById('mockTime').value)||0,notes:document.getElementById('mockNotes').value.trim()});
+ save();closeModal();render();toast('Mock recorded');
+}
+function toggleTopic(id,v){
+ const t=data.topics.find(x=>String(x.id)===String(id));
+ if(t){t.done=typeof v==='boolean'?v:!t.done;save();render();}
+}
+function toggleWeak(id){
+ const t=data.topics.find(x=>String(x.id)===String(id));
+ if(t){t.weak=!t.weak;save();render();}
+}
+function toggleRevision(id,n,v){
+ const t=data.topics.find(x=>String(x.id)===String(id));
+ if(t){t.rev=t.rev||[false,false,false];t.rev[n]=v;save();render();}
+}
+function toggleTask(id){let t=data.tasks.find(x=>x.id===id);if(t)t.done=!t.done;save();render()}
+function delExam(id){
+ if(data.exams.length<=1){toast('Keep at least one exam profile');return}
+ const e=data.exams.find(x=>String(x.id)===String(id));if(!e)return;
+ if(e.system){toast('Built-in exam profiles cannot be deleted');return}
+ if(!confirm(`Delete ${e.name} and its study data from this browser?`))return;
+ data.exams=data.exams.filter(x=>String(x.id)!==String(id));
+ data.topics=data.topics.filter(x=>String(x.examId)!==String(id));
+ data.tasks=data.tasks.filter(x=>String(x.examId)!==String(id));
+ data.mocks=data.mocks.filter(x=>String(x.examId)!==String(id));
+ delete data.studyByExam[id];
+ if(String(data.activeExamId)===String(id))data.activeExamId=data.exams[0].id;
+ save();render();toast('Exam profile deleted')
+}
+function deleteMock(id){data.mocks=data.mocks.filter(x=>x.id!==id);save();render();toast('Mock deleted')}
+function toast(s){const t=document.getElementById('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+function toggleTheme(){document.body.classList.toggle('dark');toast('Theme toggle — V3 dashboard')}
+render();
+</script>
+</body>
+</html>
