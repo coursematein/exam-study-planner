@@ -1,47 +1,161 @@
-# Exam Study Planner
+Exam Study Planner
 
-A lightweight, mobile-friendly study planner for competitive-exam preparation.
+A privacy-friendly, browser-based study management system designed for
+competitive-exam preparation.
 
-The project runs entirely in the browser and stores study data locally. No account, backend, or server database is required.
+Version: 3.2
+Live Demo: https://coursematein.github.io/exam-study-planner/
 
-## Version 2.8
+What it does
 
-### Advanced Dashboard
-- Exam target countdown with days remaining / target-date status
-- Today's planned study hours and task completion
-- Overall study-task completion percentage
-- Next-action guidance based on current preparation status
-- Recent mock-test summary on the dashboard
-- Existing weak-topic tracking retained
-- Existing v2.7 mock-test validation, negative marking, accuracy and score calculations retained
-- Existing revision tracker and local browser data retained
+Exam Study Planner brings exam planning, topic tracking, revision, daily
+study planning, mock-test recording, and performance analysis into one
+lightweight browser application.
 
-## Data and compatibility
+It is designed to work without a backend, account, or server-side
+database. Study data is stored locally in the user’s browser.
 
-Study data is stored in browser Local Storage under the same `examStudyPlanner.v2` key used by v2.7. Updating the application does not intentionally clear existing v2.7 data on the same browser/device.
+Features
 
-If the app is opened on a different browser/device, local study data will not automatically appear because it is browser-local.
+📊 Smart MIS Dashboard
 
-## Running locally
+• Preparation progress at a glance
+• Topic completion summary
+• Study-hours overview
+• Task-completion indicators
+• Mock-test performance
+• Preparation/readiness indicators
+• Quick actions for common tasks
 
-Open `index.html` in a modern browser. No installation or build process is required.
+🎯 Exam Management
 
-## GitHub Pages
+• Create and manage exams
+• Set target dates
+• Set planned daily study hours
+• Track preparation against the selected exam
 
-Upload `index.html`, `README.md`, and `CHANGELOG.md` to the repository root. GitHub Pages can serve `index.html` directly.
+📚 Subject & Topic Management
 
-## Privacy
+• Organize preparation by subject
+• Add topics directly within a subject
+• Mark topics as completed
+• Identify weak topics
+• Track topic-level progress
 
-Study data remains in the browser. The application does not require an account or send study records to a server.
+🔄 Revision Tracker
 
-## Technology
+• Revision 1, Revision 2 and Revision 3 for completed topics
+• Topic-level revision status
+• Pending-revision indication for topics that have not yet been
+completed
+• Revision progress reflected in the dashboard/analytics
 
-- HTML
-- CSS
-- JavaScript
-- Browser Local Storage
-- GitHub Pages
+📅 Daily Study Plan
 
-## License
+• Add study tasks
+• Record planned study activity
+• Track task completion
 
-MIT License.
+🧪 Mock Tests
+
+• Record mock-test performance
+• Total questions
+• Correct answers
+• Wrong answers
+• Automatically calculated unattempted questions
+• Configurable negative marking
+• Marks after negative marking
+• Score percentage
+• Accuracy
+• Time taken
+• Mistake/lesson tracking
+
+📈 MIS & Analytics
+
+• Preparation statistics
+• Subject/topic performance
+• Revision status
+• Mock-test performance
+• Weak-area identification
+• Readiness-oriented insights
+
+Privacy
+
+The application is designed as a client-side tool.
+
+• No login is required.
+• No backend database is required.
+• Study information is stored locally in the browser using
+localStorage.
+• The project does not require users to upload their study data to a
+server.
+
+Technology
+
+• HTML5
+• CSS3
+• Vanilla JavaScript
+• Browser LocalStorage
+
+No framework or build system is required.
+
+Running locally
+
+Download index.html and open it in a modern web browser.
+
+Because the application is self-contained, the basic planner can run
+without installing dependencies.
+
+Live Demo
+
+https://coursematein.github.io/exam-study-planner/
+
+Project Status
+
+Current release: V3.2
+
+The project is being developed based on practical use and testing during
+exam preparation.
+
+Roadmap
+
+Planned improvements may include:
+
+• Multiple exam profiles
+• Study-session timer
+• Import/export of study plans
+• Printable study plans
+• More detailed performance charts
+• Improved accessibility
+• Better mobile interactions
+• Backup and restore options
+• Additional mock-test analytics
+
+The roadmap may change based on actual user needs and testing.
+
+Contributing
+
+Suggestions, bug reports, documentation improvements and code
+contributions are welcome.
+
+If you find an issue:
+
+1. Describe what you expected to happen.
+2. Describe what actually happened.
+3. Include the browser/device where possible.
+4. Provide steps to reproduce the issue.
+
+Changelog
+
+See CHANGELOG.md for version history.
+
+License
+
+This project is released under the MIT License. See LICENSE for
+details.
+
+Disclaimer
+
+This is an independent educational productivity project. It is not
+affiliated with, endorsed by, or sponsored by any examination authority
+or government organization.
